@@ -1,9 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Results</h1>
+<div class="results-container">
+    <h1>Your Score: 69/100</h1>
 
-<!-- Display Photo from camera-->
- 
+    {% if photo_data %}
+    <div class="photo-container">
+        <img src="{{ photo_data }}" alt="Uploaded photo" style="max-width: 100%;">
+    </div>
+    {% else %}
+    <p>No photo uploaded. <a href="{{ url_for('main.camera') }}">Take a photo</a></p>
+    {% endif %}
+</div>
 
+<h1>Google Sign </h1>
 {% endblock %}
