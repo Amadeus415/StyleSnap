@@ -2,6 +2,8 @@
 
 {% block content %}
 <div class="main-container">
+
+    <!-- User Profile -->
     <div class="user-profile">
         {% if user_info %}
             <img src="{{ user_info.picture }}" alt="Profile picture" class="profile-pic">
@@ -10,8 +12,9 @@
         {% endif %}
     </div>
 
+    <!-- Latest Photo -->
     <div class="results-history">
-        <h2>Your Latest Style</h2>
+        <h2>Your Latest Upload</h2>
         {% if last_photo %}
             <div class="latest-photo">
                 <img src="{{ last_photo }}" alt="Your latest photo" style="max-width: 100%;">
@@ -20,5 +23,26 @@
             <p>No photos yet. <a href="{{ url_for('main.camera') }}">Take your first photo!</a></p>
         {% endif %}
     </div>
+
+
+    <!-- Amazon Products -->
+     <!-- Add this new section -->
+    <div class="recommended-products">
+        <h2>Recommended Products</h2>
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <img src="{{ product.image_url }}" alt="{{ product.title }}">
+                <h3>{{ product.title }}</h3>
+                <p class="price">${{ product.price }}</p>
+                <p class="description">{{ product.description }}</p>
+                <a href="{{ product.affiliate_link }}" class="buy-button" target="_blank">
+                    Buy on Amazon
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}
+

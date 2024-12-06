@@ -3,6 +3,7 @@
 {% block content %}
 <div class="results-container">
     <h1>Your Score: 69/100</h1>
+    <h2></h2>
 
     {% if photo_data %}
     <div class="photo-container">
@@ -16,7 +17,7 @@
         <h2>Save Your Results</h2>
         <p>Sign in with Google to save your results and get personalized recommendations!</p>
         <a href="{{ url_for('main.login') }}" class="google-sign-in">
-            <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png" alt="Sign in with Google">
+            <img src="{{ url_for('static', filename='assets/google.png') }}" alt="Sign in with Google">
         </a>
     </div>
 </div>

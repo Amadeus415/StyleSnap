@@ -19,6 +19,11 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
+
+    # Get local IP address
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    print(f"Local IP Address: {local_ip}")
     
     # Create SSL context with verification flags
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -29,7 +34,7 @@ if __name__ == '__main__':
     context.load_cert_chain('localhost+1.pem', 'localhost+1-key.pem')
     
     app.run(
-        host='127.0.0.1',
+        host='0.0.0.0',
         port=5000,
         ssl_context=context,
         debug=True

@@ -6,7 +6,7 @@ import os
 from config import Config
 from functools import wraps
 import uuid # for unique filename
-
+from .utils import load_amazon_products
 
 
 # Allow HTTP for local development
@@ -137,6 +137,11 @@ def oauth2callback():
 @login_required
 def dashboard():
     """Route for main page after authentication"""
+
+    # Load Amazon products
+    amazon_products = load_amazon_products()
+
     return render_template('dashboard.html', 
                          user_info=session['user_info'],
-                         last_photo=session.get('last_photo'))
+                         last_photo=session.get('last_photo'),
+                         products=amazon_products)

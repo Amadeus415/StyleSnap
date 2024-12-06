@@ -1,0 +1,118 @@
+
+{
+    "products": [
+
+      {
+        "title": "Cuban Chain",
+        "description": "Mens Cuban Chain",
+        "price": 32.68,
+        "affiliate_link": "https://amzn.to/3B4p0Sx",
+        "image_url": "https://m.media-amazon.com/images/I/61cVggrR-oL._AC_SY625_.jpg",
+        "category": "Accessories",
+        "tags": ["chain", "men", "neckwear"]
+
+      },
+      {
+        "title": "Diamond-Cut Cuban Bracelet",
+        "description": "Cuban Chain Bracelet",
+        "price": 47.90,
+        "affiliate_link": "https://amzn.to/3OGWsBG",
+        "image_url": "https://m.media-amazon.com/images/I/71EVXENx2aL._AC_SX625_.jpg",
+        "category": "Accessories",
+        "tags": ["bracelet", "cuban chain", "wristwear"]
+      },
+
+      {
+        "title": "Lightweight Moisturizer",
+        "description": "Lightweight hydrating moisturizer",
+        "price": 43.22,
+        "affiliate_link": "https://amzn.to/3BgMP9w",
+        "image_url": "https://m.media-amazon.com/images/I/616ulh+TjEL._SX522_.jpg",
+        "category": "skincare",
+        "tags": ["moisturizer", "lightweight", "hydrating"]
+      },
+      {
+        "title": "Daily Skin Care Set",
+        "description": "Daily skin care set",
+        "price": 36.99,
+        "affiliate_link": "https://amzn.to/4ipyBUO",
+        "image_url": "https://m.media-amazon.com/images/I/8195K8F2ORL._SX679_.jpg",
+        "category": "skincare",
+        "tags": ["Acne", "moisturizer", "face wash"]
+      },
+
+      {
+        "title": "Casual Henley Shirt",
+        "description": "Casual Henley",
+        "price": 29.99,
+        "affiliate_link": "https://amzn.to/3D3tSrC",
+        "image_url": "https://m.media-amazon.com/images/I/71bB9oMgpDL._AC_SX569_.jpg",
+        "category": "clothes",
+        "tags": ["cotton", "t-shirt", "casual"]
+      },
+      {
+        "title": "Oversized T-Shirt",
+        "description": "Oversized T-Shirt",
+        "price": 38.99,
+        "affiliate_link": "https://amzn.to/4gnXJcH",
+        "image_url": "https://m.media-amazon.com/images/I/71pcS7eof8L._AC_SX569_.jpg",
+        "category": "clothes",
+        "tags": ["oversized", "t-shirt", "casual"]
+      },
+      {
+        "title": "Corduroy Pants",
+        "description": "Corduroy Pants",
+        "price": 19.99,
+        "affiliate_link": "https://amzn.to/4g1IAOc",
+        "image_url": "https://m.media-amazon.com/images/I/61cSaYkoX9L._AC_SY741_.jpg",
+        "category": "clothes",
+        "tags": ["corduroy", "pants", "baggy"]
+      },
+      {
+        "title": "Polo Ralph Lauren Down Jacket",
+        "description": "Polo Ralph Lauren Down Jacket",
+        "price": 241.01,
+        "affiliate_link": "https://amzn.to/4g1XmVa",
+        "image_url": "https://m.media-amazon.com/images/I/610uvJY9tLL._AC_SY741_.jpg",
+        "category": "clothes",
+        "tags": ["down jacket", "polo", "ralph lauren"]
+      },
+      {
+        "title": "Trucker Hat",
+        "description": "Western Trucker Hat",
+        "price": 29.99,
+        "affiliate_link": "https://amzn.to/3ZlKyC0",
+        "image_url": "https://m.media-amazon.com/images/I/81voWl5quTL._AC_SX679_.jpg",
+        "category": "accessories",
+        "tags": ["wallet", "leather", "wallet"]
+      },
+      {
+        "title": "Adidas Samba Sneakers",
+        "description": "Adidas Samba Sneakers",
+        "price": 89.95,
+        "affiliate_link": "https://amzn.to/4gcl5Sq",
+        "image_url": "https://m.media-amazon.com/images/I/71xQ8BDE6lL._AC_SX625_.jpg",
+        "category": "shoes",
+        "tags": ["sneakers", "adidas", "casual"]
+      },
+      {
+        "title": "Apple Airpods",
+        "description": "Apple Airpods",
+        "price": 131.49,
+        "affiliate_link": "https://amzn.to/3Zmh0UL",
+        "image_url": "https://m.media-amazon.com/images/I/41Kz9H3v0yL._AC_SY500_.jpg",
+        "category": "tech",
+        "tags": ["airpods", "apple", "wireless"]
+      },
+      {
+        "title": "Beats Solo 4",
+        "description": "Beats Solo 4",
+        "price": 124.99,
+        "affiliate_link": "https://amzn.to/4f2JRn6",
+        "image_url": "https://m.media-amazon.com/images/I/51sZFm7L2BL._AC_SX679_.jpg",
+        "category": "tech",
+        "tags": ["beats", "solo", "4"]
+      }
+
+    ]
+  }
