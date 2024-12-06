@@ -8,5 +8,5 @@ __pycache__/
 
 ./app/static/photos/
 
-.pem
-
+# SSL certificates
+*.pem
