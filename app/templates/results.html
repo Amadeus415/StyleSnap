@@ -11,7 +11,13 @@
     {% else %}
     <p>No photo uploaded. <a href="{{ url_for('main.camera') }}">Take a photo</a></p>
     {% endif %}
-</div>
 
-<h1>Google Sign </h1>
+    <div class="auth-container">
+        <h2>Save Your Results</h2>
+        <p>Sign in with Google to save your results and get personalized recommendations!</p>
+        <a href="{{ url_for('main.login') }}" class="google-sign-in">
+            <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png" alt="Sign in with Google">
+        </a>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    <div class="user-profile">
+        {% if user_info %}
+            <img src="{{ user_info.picture }}" alt="Profile picture" class="profile-pic">
+            <h2>Welcome, {{ user_info.name }}!</h2>
+            <p>{{ user_info.email }}</p>
+        {% endif %}
+    </div>
+
+    <div class="results-history">
+        <h2>Your Latest Style</h2>
+        {% if last_photo %}
+            <div class="latest-photo">
+                <img src="{{ last_photo }}" alt="Your latest photo" style="max-width: 100%;">
+            </div>
+        {% else %}
+            <p>No photos yet. <a href="{{ url_for('main.camera') }}">Take your first photo!</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
