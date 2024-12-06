@@ -8,5 +8,4 @@ __pycache__/
 
 ./app/static/uploads/
 
-key.pem
-cert.pem
+.pem

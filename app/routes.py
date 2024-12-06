@@ -5,6 +5,9 @@ from google.auth.transport import requests
 import os
 from config import Config
 from functools import wraps
+import uuid # for unique filename
+
+
 
 # Allow HTTP for local development
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -43,16 +46,35 @@ def camera():
     """Route for camera page"""
     return render_template('camera.html')
 
+
 @main.route('/results', methods=['GET', 'POST'])
 def results():
     """Route for results page"""
     if request.method == 'POST':
         photo_data = request.form.get('photo')
         if photo_data:
-            # Store photo_data in session for later use
-            session['last_photo'] = photo_data
-            return render_template('results.html', photo_data=photo_data)
+            # Generate unique filename
+            filename = f"{uuid.uuid4()}.jpg"
+            photo_path = os.path.join(current_app.static_folder, 'photos', filename)
+            
+            # Ensure photos directory exists
+            os.makedirs(os.path.join(current_app.static_folder, 'photos'), exist_ok=True)
+            
+            # Save base64 image data (remove the data:image/jpeg;base64, prefix)
+            import base64
+            photo_data = photo_data.split(',')[1]
+            with open(photo_path, 'wb') as f:
+                f.write(base64.b64decode(photo_data))
+
+            # Create URL for the saved photo
+            photo_url = url_for('static', filename=f'photos/{filename}')
+            
+            # Store only the filename in session
+            session['last_photo'] = photo_url
+            
+            return render_template('results.html', photo_data=photo_url)
     return redirect(url_for('main.camera'))
+
 
 @main.route('/login')
 def login():
@@ -62,7 +84,9 @@ def login():
     
     flow = Flow.from_client_config(
         client_secrets,
-        scopes=['openid', 'email', 'profile']
+        scopes=['https://www.googleapis.com/auth/userinfo.email',
+                'https://www.googleapis.com/auth/userinfo.profile',
+                'openid']
     )
     flow.redirect_uri = Config.GOOGLE_REDIRECT_URI
     authorization_url, state = flow.authorization_url(
@@ -78,7 +102,9 @@ def oauth2callback():
     try:
         flow = Flow.from_client_config(
             client_secrets,
-            scopes=['openid', 'email', 'profile'],
+            scopes=['https://www.googleapis.com/auth/userinfo.email',
+                   'https://www.googleapis.com/auth/userinfo.profile',
+                   'openid'],
             state=session['state']
         )
         flow.redirect_uri = Config.GOOGLE_REDIRECT_URI
