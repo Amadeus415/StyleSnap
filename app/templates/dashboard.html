@@ -4,44 +4,66 @@
 <div class="main-container">
 
     <!-- User Profile -->
-    <div class="user-profile">
+    <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-4">
         {% if user_info %}
-            <img src="{{ user_info.picture }}" alt="Profile picture" class="profile-pic">
-            <h2>Welcome, {{ user_info.name }}!</h2>
-            <p>{{ user_info.email }}</p>
+            <img src="{{ user_info.picture }}" alt="Profile picture" class="h-16 w-16 rounded-full object-cover">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Welcome, {{ user_info.name }}!</h2>
+                <p class="text-gray-600">{{ user_info.email }}</p>
+            </div>
         {% endif %}
     </div>
 
     <!-- Latest Photo -->
-    <div class="results-history">
-        <h2>Your Latest Upload</h2>
+    <div class="bg-white rounded-lg shadow-lg p-6 my-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Latest Upload</h2>
         {% if last_photo %}
-            <div class="latest-photo">
-                <img src="{{ last_photo }}" alt="Your latest photo" style="max-width: 100%;">
+            <div class="rounded-lg overflow-hidden max-w-md mx-auto">
+                <img src="{{ last_photo }}" alt="Your latest photo" class="w-full h-64 object-cover">
             </div>
         {% else %}
-            <p>No photos yet. <a href="{{ url_for('main.camera') }}">Take your first photo!</a></p>
+            <p class="text-gray-600">
+                No photos yet. 
+                <a href="{{ url_for('main.camera') }}" class="text-primary hover:text-primary-focus underline">
+                    Take your first photo!
+                </a>
+            </p>
         {% endif %}
     </div>
 
 
     <!-- Amazon Products -->
-     <!-- Add this new section -->
-    <div class="recommended-products">
-        <h2>Recommended Products</h2>
-        <div class="products-grid">
+    <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
+        <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-8">Recommended Products</h2>
+        <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
             {% for product in products %}
-            <div class="product-card">
-                <img src="{{ product.image_url }}" alt="{{ product.title }}">
-                <h3>{{ product.title }}</h3>
-                <p class="price">${{ product.price }}</p>
-                <p class="description">{{ product.description }}</p>
-                <a href="{{ product.affiliate_link }}" class="buy-button" target="_blank">
-                    Buy on Amazon
-                </a>
+            <div class="group relative">
+                <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200">
+                    <img 
+                        src="{{ product.image_url }}" 
+                        alt="{{ product.title }}"
+                        class="h-full w-full object-cover object-center group-hover:opacity-75"
+                    >
+                </div>
+                <div class="mt-4 flex justify-between">
+                    <div>
+                        <h3 class="text-sm text-gray-700">
+                            <a href="{{ product.affiliate_link }}" class="hover:underline">
+                                <span aria-hidden="true" class="absolute inset-0"></span>
+                                {{ product.title }}
+                            </a>
+                        </h3>
+                        <p class="mt-1 text-sm text-gray-500">{{ product.category }}</p>
+                    </div>
+                    <p class="text-sm font-medium text-gray-900">${{ product.price }}</p>
+                </div>
+                <div class="mt-2">
+                    <a href="{{ product.affiliate_link }}" class="btn btn-primary btn-sm w-full">View Details</a>
+                </div>
             </div>
             {% endfor %}
         </div>
+    </div>
     </div>
 </div>
 {% endblock %}

@@ -2,10 +2,70 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div>
-    <a href="{{ url_for('main.camera') }}" >
-        <i></i>
-        <span>Take Photo</span>
-    </a>
+<!-- Hero section with background image -->
+<div class="hero min-h-screen" style="background-image: url('https://images.unsplash.com/photo-1444210971048-6130cf0c46cf?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+  <div class="hero-overlay bg-opacity-60"></div>
+  <div class="hero-content text-center text-neutral-content">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-8xl font-bold text-black">Look Better, More Friends</h1>
+      <p class="mb-5 text-2xl font-bold text-white">Get instant AI-powered fashion feedback and personalized style recommendations. Transform your wardrobe with smart insights.</p>
+      <div class="space-y-4">
+
+        <a class="group inline-block rounded bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] text-black focus:outline-none focus:ring active:text-opacity-75 hover:scale-105 transition-transform duration-300" href="{{url_for('main.camera')}}" >
+            <span class="block rounded-sm px-8 py-3 text-sm font-medium bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 group-hover:bg-gradient-to-l">
+                Open Camera
+            </span>
+        </a>
+        <!-- <a href="{{ url_for('main.camera') }}" class="btn btn-primary">Take Photo</a>
+        <button class="btn btn-outline btn-white">Learn More</button> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Features section -->
+<div class="py-24 bg-base-100">
+  <div class="max-w-6xl mx-auto px-4">
+    <h2 class="text-4xl font-bold text-center mb-16">How It Works</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Feature 1 -->
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body items-center text-center">
+          <div class="text-4xl mb-4">📸</div>
+          <h3 class="card-title">Snap a Photo</h3>
+          <p>Take a quick photo of your outfit using our easy-to-use camera interface.</p>
+        </div>
+      </div>
+      <!-- Feature 2 -->
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body items-center text-center">
+          <div class="text-4xl mb-4">🤖</div>
+          <h3 class="card-title">AI Analysis</h3>
+          <p>Our AI analyzes your style and provides detailed feedback and suggestions.</p>
+        </div>
+      </div>
+      <!-- Feature 3 -->
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body items-center text-center">
+          <div class="text-4xl mb-4">✨</div>
+          <h3 class="card-title">Get Recommendations</h3>
+          <p>Receive personalized product recommendations that match your style.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA section -->
+<div class="bg-primary text-primary-content">
+  <div class="hero min-h-[400px]">
+    <div class="hero-content text-center">
+      <div class="max-w-md">
+        <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Style?</h2>
+        <p class="mb-6">Join thousands of users who have improved their fashion game with StyleSnap.</p>
+        <a href="{{ url_for('main.camera') }}" class="btn btn-secondary">Get Started</a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

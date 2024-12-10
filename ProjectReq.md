@@ -4,6 +4,10 @@
 * Monetization: Affiliate links to clothing stores, premium features
 
 # Tech Stack
-1. html, tailwindcss
-2. JS for camera fucntion
-3. Flask for api
+1. frontend: html, tailwindcss
+2. Camera: Javascript
+3. Backend: Flask
+4. Storeage: ??AWS S3
+5. Auth: Google auth
+6. AI: xAI api
+7. Products: Amazon Prod Adv API

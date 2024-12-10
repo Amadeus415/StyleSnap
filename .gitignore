@@ -11,3 +11,43 @@ app/static/photos/*
 
 # SSL certificates
 *.pem
+# Node modules and build files
+node_modules/
+dist/
+build/
+
+# Tailwind CSS build output
+app/static/css/main.css
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Python virtual environment
+*.pyc
+*.pyo
+.Python
+env/
+develop-eggs/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Flask session files
+flask_session/
+
+# AWS credentials
+.aws/

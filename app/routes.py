@@ -58,7 +58,8 @@ def results():
             photo_path = os.path.join(current_app.static_folder, 'photos', filename)
             
             # Ensure photos directory exists
-            os.makedirs(os.path.join(current_app.static_folder, 'photos'), exist_ok=True)
+            os.makedirs(os.path.join(current_app.static_folder, 'photos'),mode=0o755, exist_ok=True)
+
             
             # Save base64 image data (remove the data:image/jpeg;base64, prefix)
             import base64

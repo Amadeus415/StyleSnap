@@ -1,19 +1,39 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="camera-container">
-    <button id="cameraButton">
-        <i></i>
-        <span>Open Camera</span>
-    </button>
-    
-    <div id="previewContainer" style="display: none;">
-        <img id="photoPreview" src="" alt="Captured photo" style="max-width: 100%; margin: 10px 0;">
+<div class="max-w-3xl mx-auto p-4">
+    <!-- Camera controls -->
+    <div class="text-center mb-6">
+        <!-- <button id="cameraButton" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
+            <span>Open Camera</span>
+        </button> -->
+        
+        <a id = "cameraButton" class="group inline-block rounded bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75" href="#" >
+            <span class="block rounded-sm bg-white px-8 py-3 text-sm font-medium group-hover:bg-transparent">
+                Open Camera
+            </span>
+        </a>
     </div>
 
-    <form id="uploadForm" action="{{ url_for('main.results') }}" method="POST" enctype="multipart/form-data" style="display: none;">
+    <!-- Video container -->
+    <div id="videoContainer" class="hidden">
+        <video id="video" playsinline autoplay class="w-full rounded-lg shadow-lg"></video>
+        <button id="captureButton" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors w-full">
+            Take Photo
+        </button>
+    </div>
+    
+    <!-- Preview container -->
+    <div id="previewContainer" class="hidden">
+        <img id="photoPreview" src="" alt="Captured photo" class="w-full rounded-lg shadow-lg">
+    </div>
+
+    <!-- Upload form -->
+    <form id="uploadForm" action="{{ url_for('main.results') }}" method="POST" enctype="multipart/form-data" class="hidden mt-4">
         <input type="hidden" id="photoData" name="photo">
-        <button type="submit" id="uploadButton">Save and Continue</button>
+        <button type="submit" id="uploadButton" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full">
+            Save and Continue
+        </button>
     </form>
 </div>
 {% endblock %}

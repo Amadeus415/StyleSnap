@@ -6,24 +6,40 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
 
     <title>{% block title %}StyleSnap{% endblock %}</title>
-    
+
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
 
 </head>
 <body>
-    <header>
-        <nav>
-            <h1>StyleSnap</h1>
+    <header class="fixed w-full top-0 z-50 bg-white shadow-sm">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo/Brand -->
+                <div>
+                    <a href="{{ url_for('main.landing') }}" class="text-2xl font-bold">
+                        StyleSnap
+                    </a>
+                </div>
+                
+                <!-- Navigation Links -->
+                <div class="hidden md:flex space-x-6">
+                    <a href="{{ url_for('main.landing') }}" class="hover:text-gray-600">Home</a>
+                    <a href="{{ url_for('main.camera') }}" class="hover:text-gray-600">Camera</a>
+                    <a href="{{ url_for('main.dashboard') }}" class="hover:text-gray-600">Dashboard</a>
+                    <a href="{{ url_for('main.results') }}" class="hover:text-gray-600">Results</a>
+                </div>
+            </div>
         </nav>
     </header>
 
-    <main>
+    <main class="mt-16 min-h-screen px-4 py-8">
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer>
+    <footer class="bg-gray-100 py-4 text-center">
         <p>&copy; 2024 StyleSnap. All rights reserved.</p>
     </footer>
 </body>

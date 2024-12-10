@@ -1,75 +1,68 @@
 document.addEventListener('DOMContentLoaded', function() {
     const cameraButton = document.getElementById('cameraButton');
+    const videoContainer = document.getElementById('videoContainer');
+    const video = document.getElementById('video');
+    const captureButton = document.getElementById('captureButton');
     const uploadForm = document.getElementById('uploadForm');
     const photoDataInput = document.getElementById('photoData');
-    const uploadButton = document.getElementById('uploadButton');
     const previewContainer = document.getElementById('previewContainer');
     const photoPreview = document.getElementById('photoPreview');
     let stream = null;
-    let videoElement = null;
     let canvas = null;
 
     cameraButton.addEventListener('click', async function() {
-        if (!videoElement) {
-            videoElement = document.createElement('video');
-            videoElement.setAttribute('playsinline', '');
-            videoElement.setAttribute('autoplay', '');
-            document.body.appendChild(videoElement);
-
-            const captureButton = document.createElement('button');
-            captureButton.textContent = 'Take Photo';
-            document.body.appendChild(captureButton);
-
-            canvas = document.createElement('canvas');
-
+        if (!stream) {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ 
                     video: { facingMode: 'environment' }, 
                     audio: false 
                 });
-                videoElement.srcObject = stream;
-
-                captureButton.addEventListener('click', function() {
-                    canvas.width = videoElement.videoWidth;
-                    canvas.height = videoElement.videoHeight;
-                    canvas.getContext('2d').drawImage(videoElement, 0, 0);
-                    
-                    // Get image data and update preview
-                    const imageDataUrl = canvas.toDataURL('image/jpeg');
-                    photoDataInput.value = imageDataUrl;
-                    photoPreview.src = imageDataUrl;
-                    
-                    // Show preview and upload form
-                    previewContainer.style.display = 'block';
-                    uploadForm.style.display = 'block';
-                    
-                    // Stop camera and cleanup
-                    if (stream) {
-                        stream.getTracks().forEach(track => track.stop());
-                    }
-                    videoElement.remove();
-                    captureButton.remove();
-                    videoElement = null;
-                });
+                video.srcObject = stream;
+                videoContainer.classList.remove('hidden');
+                cameraButton.textContent = 'Close Camera';
+                
+                // Hide preview and form if showing
+                previewContainer.classList.add('hidden');
+                uploadForm.classList.add('hidden');
             } catch (err) {
                 console.error('Error accessing camera:', err);
             }
         } else {
-            // Reset everything
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-            }
-            videoElement.remove();
-            document.querySelectorAll('button').forEach(el => {
-                if (el !== cameraButton && el !== uploadButton) el.remove();
-            });
-            videoElement = null;
-            canvas = null;
+            // Stop camera and reset UI
+            stream.getTracks().forEach(track => track.stop());
             stream = null;
-            uploadForm.style.display = 'none';
-            previewContainer.style.display = 'none';
-            photoDataInput.value = '';
-            photoPreview.src = '';
+            videoContainer.classList.add('hidden');
+            cameraButton.textContent = 'Open Camera';
         }
+    });
+
+    captureButton.addEventListener('click', function() {
+        if (!canvas) {
+            canvas = document.createElement('canvas');
+        }
+        
+        // Set canvas dimensions to match video
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw video frame to canvas
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        
+        // Get image data and update preview
+        const imageDataUrl = canvas.toDataURL('image/jpeg');
+        photoDataInput.value = imageDataUrl;
+        photoPreview.src = imageDataUrl;
+        
+        // Show preview and upload form
+        previewContainer.classList.remove('hidden');
+        uploadForm.classList.remove('hidden');
+        
+        // Stop camera and hide video
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+        videoContainer.classList.add('hidden');
+        cameraButton.textContent = 'Open Camera';
     });
 });

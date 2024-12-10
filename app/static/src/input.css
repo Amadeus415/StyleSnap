@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand text-white px-4 py-2 rounded-lg hover:bg-opacity-90;
+  }
+}
+
+/* Add regular CSS for non-Tailwind elements */
+.camera-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.results-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.user-profile {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.product-card {
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* Add any other specific CSS classes you need for your HTML elements */
