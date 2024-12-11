@@ -1,8 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="main-container">
-
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- User Profile -->
     <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-4">
         {% if user_info %}
@@ -14,56 +13,124 @@
         {% endif %}
     </div>
 
-    <!-- Latest Photo -->
+    <!-- Latest Photo with Score -->
     <div class="bg-white rounded-lg shadow-lg p-6 my-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Latest Upload</h2>
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Latest Style Analysis</h2>
         {% if last_photo %}
-            <div class="rounded-lg overflow-hidden max-w-md mx-auto">
-                <img src="{{ last_photo }}" alt="Your latest photo" class="w-full h-64 object-cover">
-            </div>
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Photo Display -->
+                <div class="rounded-lg overflow-hidden">
+                    <img src="{{ last_photo }}" alt="Your latest photo" class="w-full h-auto object-cover">
+                </div>
+                <!-- Score and Stats -->
+                <div class="flex flex-col justify-center space-y-8">
+                    <!-- Overall Score -->
+                    <div class="text-center">
+                        <h3 class="text-lg font-semibold text-black">Overall Score</h3>
+                        <div class="text-5xl font-bold text-red-500">{{ analysis.score }}</div>
+                    </div>
+
+                    <!-- Potential Score -->
+                    <div class="text-center">
+                        <h3 class="text-lg font-semibold text-black">Potential Score</h3>
+                        <div class="text-7xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent">{{ analysis.pscore }}</div>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-3 gap-4">
+                        <!-- Masculinity -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Masculinity</div>
+                            <div class="text-xl text-primary">{{ analysis.masculinity }}</div>
+                        </div>
+                        
+                        <!-- Skin Quality -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Skin Quality</div>
+                            <div class="text-xl text-primary">{{ analysis.skin }}</div>
+                        </div>
+                        
+                        <!-- Jawline -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Jawline</div>
+                            <div class="text-xl text-primary">{{ analysis.jawline }}</div>
+                        </div>
+
+                        <!-- Hair -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Hair</div>
+                            <div class="text-xl text-primary">{{ analysis.hair }}</div>
+                        </div>
+                        
+                        <!-- Style -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Style</div>
+                            <div class="text-xl text-primary">{{ analysis.style }}</div>
+                        </div>
+                        
+                        <!-- Smile -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Smile</div>
+                            <div class="text-xl text-primary">{{ analysis.smile }}</div>
+                        </div>
+                    </div>
+                </div>
         {% else %}
-            <p class="text-gray-600">
-                No photos yet. 
-                <a href="{{ url_for('main.camera') }}" class="text-primary hover:text-primary-focus underline">
-                    Take your first photo!
+            <div class="text-center py-12">
+                <p class="text-gray-600 mb-4">No photos analyzed yet.</p>
+                <a href="{{ url_for('main.camera') }}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-focus">
+                    Take Your First Photo
                 </a>
-            </p>
+            </div>
         {% endif %}
     </div>
 
-
-    <!-- Amazon Products -->
-    <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
-        <h2 class="text-3xl font-bold tracking-tight text-gray-900 mb-8">Recommended Products</h2>
-        <div class="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+    <!-- Recommended Products -->
+    <div class="mt-12">
+        <h2 class="text-2xl font-bold text-gray-900 mb-8">Recommended Products</h2>
+        
+        <!-- Grid Container - Single column on mobile, 2-3 columns on larger screens -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for product in products %}
-            <div class="group relative">
-                <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200">
-                    <img 
-                        src="{{ product.image_url }}" 
-                        alt="{{ product.title }}"
-                        class="h-full w-full object-cover object-center group-hover:opacity-75"
-                    >
-                </div>
-                <div class="mt-4 flex justify-between">
-                    <div>
-                        <h3 class="text-sm text-gray-700">
-                            <a href="{{ product.affiliate_link }}" class="hover:underline">
-                                <span aria-hidden="true" class="absolute inset-0"></span>
-                                {{ product.title }}
-                            </a>
-                        </h3>
-                        <p class="mt-1 text-sm text-gray-500">{{ product.category }}</p>
+            <!-- Product Card -->
+            <div class="relative group">
+                <!-- Image Container with Fixed Height -->
+                <div class="relative aspect-[3/4] overflow-hidden rounded-lg">
+                    <img src="{{ product.image_url }}" 
+                        alt="{{ product.title }}" 
+                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    
+                    <!-- Hover Description Overlay -->
+                    <div class="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-4">
+                        <div class="text-white text-center">
+                            <h3 class="font-bold mb-2">{{ product.title }}</h3>
+                            <p class="text-md font-semibold">{{ product.description }}</p>
+                            
+                            {% if product.benefits %}
+                                {% for stat, value in product.benefits.items() %}
+                                <p class="mt-1 text-sm font-bold text-white bg-green-700 px-2 py-1 rounded">{{ stat|title }}: {{ value }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
                     </div>
-                    <p class="text-sm font-medium text-gray-900">${{ product.price }}</p>
                 </div>
-                <div class="mt-2">
-                    <a href="{{ product.affiliate_link }}" class="btn btn-primary btn-sm w-full">View Details</a>
+
+                <!-- Product Info Below Image -->
+                <div class="mt-4">
+                    <h3 class="text-sm text-gray-700 font-medium">{{ product.title }}</h3>
+                    <p class="mt-1 text-lg font-bold text-gray-900">${{ product.price }}</p>
+                    
+                    <!-- View Details Button -->
+                    <a href="{{ product.affiliate_link }}" 
+                    target="_blank"
+                    class="mt-2 block w-full text-center px-4 py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-black font-medium rounded-full shadow-sm transition-colors">
+                        Buy Now
+                    </a>
                 </div>
             </div>
             {% endfor %}
         </div>
-    </div>
     </div>
 </div>
 {% endblock %}

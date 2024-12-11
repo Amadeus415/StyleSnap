@@ -2,38 +2,77 @@
 
 {% block content %}
 <div class="max-w-3xl mx-auto p-4">
-    <!-- Camera controls -->
-    <div class="text-center mb-6">
-        <!-- <button id="cameraButton" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors">
-            <span>Open Camera</span>
-        </button> -->
-        
-        <a id = "cameraButton" class="group inline-block rounded bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75" href="#" >
-            <span class="block rounded-sm bg-white px-8 py-3 text-sm font-medium group-hover:bg-transparent">
-                Open Camera
-            </span>
-        </a>
+    <div class="flex flex-col items-center gap-8">
+        <!-- Camera Button -->
+        <div class="text-center">
+            <a id="cameraButton" class="group inline-block rounded bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] hover:text-white focus:outline-none focus:ring active:text-opacity-75" href="#">
+                <span class="block rounded-sm bg-white px-8 py-3 text-sm font-medium group-hover:bg-transparent">
+                    Open Camera
+                </span>
+            </a>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider">OR</div>
+
+        <!-- File Upload Section -->
+        <div class="w-full max-w-md">
+            <form action="{{ url_for('main.results') }}" method="POST" enctype="multipart/form-data" class="flex flex-col items-center gap-4">
+                <div class="flex w-full items-center justify-center">
+                    <label class="group flex w-full cursor-pointer flex-col items-center rounded-lg border-2 border-dashed border-gray-300 bg-white p-6 hover:border-primary">
+                        <div class="flex flex-col items-center justify-center">
+                            <svg class="h-10 w-10 text-gray-400 group-hover:text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <p class="mt-2 text-sm text-gray-500 group-hover:text-primary">Click to upload or drag and drop</p>
+                            <p class="mt-1 text-xs text-gray-500 group-hover:text-primary">PNG, JPG, JPEG (MAX. 800x400px)</p>
+                        </div>
+                        <input type="file" name="photo" class="hidden" accept="image/*" onchange="showFileName(this)"/>
+                    </label>
+                </div>
+                <p id="fileName" class="text-sm text-gray-500"></p>
+                <button type="submit" id="uploadFileButton" class="btn btn-primary w-full" disabled>
+                    Upload and Continue
+                </button>
+            </form>
+        </div>
     </div>
 
     <!-- Video container -->
-    <div id="videoContainer" class="hidden">
+    <div id="videoContainer" class="hidden mt-8">
         <video id="video" playsinline autoplay class="w-full rounded-lg shadow-lg"></video>
-        <button id="captureButton" class="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors w-full">
+        <button id="captureButton" class="mt-4 btn btn-success w-full">
             Take Photo
         </button>
     </div>
     
     <!-- Preview container -->
-    <div id="previewContainer" class="hidden">
+    <div id="previewContainer" class="hidden mt-8">
         <img id="photoPreview" src="" alt="Captured photo" class="w-full rounded-lg shadow-lg">
     </div>
 
-    <!-- Upload form -->
+    <!-- Upload form for camera photo -->
     <form id="uploadForm" action="{{ url_for('main.results') }}" method="POST" enctype="multipart/form-data" class="hidden mt-4">
         <input type="hidden" id="photoData" name="photo">
-        <button type="submit" id="uploadButton" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors w-full">
+        <button type="submit" id="uploadButton" class="btn btn-primary w-full">
             Save and Continue
         </button>
     </form>
 </div>
+
+<script>
+function showFileName(input) {
+    const fileName = input.files[0]?.name;
+    const fileNameElement = document.getElementById('fileName');
+    const uploadButton = document.getElementById('uploadFileButton');
+    
+    if (fileName) {
+        fileNameElement.textContent = `Selected file: ${fileName}`;
+        uploadButton.disabled = false;
+    } else {
+        fileNameElement.textContent = '';
+        uploadButton.disabled = true;
+    }
+}
+</script>
 {% endblock %}

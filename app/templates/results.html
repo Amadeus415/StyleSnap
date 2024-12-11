@@ -5,44 +5,119 @@
     <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg">
         <h1 class="text-4xl font-bold text-center mb-8">
             <span class="text-primary">Your Score: </span>
-            <span class="text-6xl">69</span><span class="text-2xl">/100</span>
+            <span class="text-6xl">{{ analysis.score }}</span>
         </h1>
         
         <div class="text-2xl font-semibold text-center mb-6">
             <span class="text-gray-600">Potential Score: </span>
-            <span class="text-green-500">85/100</span>
+            <span class="text-green-500">{{ analysis.pscore }}</span>
         </div>
 
         <div class="text-lg text-center mb-8 text-gray-700">
-            You rank in top <span class="font-bold text-primary">10%</span> of men your age and gender
+            You rank in top <span class="font-bold text-primary">{{ analysis.age_percentile }}</span> of men your age and gender
         </div>
 
         <div class="grid grid-cols-3 gap-6">
+            <!-- Masculinity -->
             <div class="p-4 bg-gray-50 rounded-lg text-center">
-                <h3 class="font-medium text-gray-600">Skin Score</h3>
-                <div class="text-2xl font-bold text-primary">80/100</div>
+                <h3 class="font-medium text-gray-600">Masculinity</h3>
+                <div class="text-2xl font-bold text-primary">{{ analysis.masculinity }}</div>
             </div>
             
+            <!-- Skin Quality -->
             <div class="p-4 bg-gray-50 rounded-lg text-center">
-                <h3 class="font-medium text-gray-600">Hair Score</h3>
-                <div class="text-2xl font-bold text-primary">80/100</div>
+                <h3 class="font-medium text-gray-600">Skin Quality</h3>
+                <div class="text-2xl font-bold text-primary">{{ analysis.skin }}</div>
             </div>
             
+            <!-- Jawline -->
             <div class="p-4 bg-gray-50 rounded-lg text-center">
-                <h3 class="font-medium text-gray-600">Outfit Score</h3>
-                <div class="text-2xl font-bold text-primary">80/100</div>
+                <h3 class="font-medium text-gray-600">Jawline</h3>
+                <div class="text-2xl font-bold text-primary">{{ analysis.jawline }}</div>
+            </div>
+
+            <!-- Hair -->
+            <div class="p-4 bg-gray-50 rounded-lg text-center">
+                <h3 class="font-medium text-gray-600">Hair</h3>
+                <div class="text-2xl font-bold text-primary">{{ analysis.hair }}</div>
+            </div>
+            
+            <!-- Style -->
+            <div class="p-4 bg-gray-50 rounded-lg text-center">
+                <h3 class="font-medium text-gray-600">Style</h3>
+                <div class="text-2xl font-bold text-primary">{{ analysis.style }}</div>
+            </div>
+            
+            <!-- Smile -->
+            <div class="p-4 bg-gray-50 rounded-lg text-center">
+                <h3 class="font-medium text-gray-600">Smile</h3>
+                <div class="text-2xl font-bold text-primary">{{ analysis.smile }}</div>
             </div>
         </div>
-    </div>
 
+        <!-- Description -->
+        <div class="mt-8 p-6 bg-gray-50 rounded-lg">
+            <h3 class="font-semibold text-gray-800 mb-2">Analysis</h3>
+            <p class="text-gray-600">{{ analysis.description }}</p>
+        </div>
+
+        <!-- Image Quality Tips -->
+        <div class="mt-4 p-6 bg-gray-50 rounded-lg">
+            <h3 class="font-semibold text-gray-800 mb-2">Photo Tips</h3>
+            <p class="text-gray-600">{{ analysis.image_quality }}</p>
+        </div>
+    </div>
+    
+
+    <!-- Photo Display -->
     {% if photo_data %}
-    <div class="photo-container">
+    <div class="photo-container mx-auto">
         <img src="{{ photo_data }}" alt="Uploaded photo" style="max-width: 100%;">
     </div>
     {% else %}
     <p>No photo uploaded. <a href="{{ url_for('main.camera') }}">Take a photo</a></p>
     {% endif %}
 
+    <!-- Potential Score Section -->
+    <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-gray-800">Your Potential Score: {{ analysis.pscore }}</h3>
+            <span class="text-sm text-blue-600 font-medium">{{ analysis.age_percentile }}</span>
+        </div>
+        
+        <p class="text-gray-700 mb-4">
+            Want to discover exactly how to reach your maximum potential score of {{ analysis.pscore }}? Our premium insights reveal personalized strategies to enhance your appearance and boost your social success.
+        </p>
+
+        <div class="bg-white p-4 rounded-md shadow-sm">
+            <ul class="space-y-2 text-gray-600 mb-4">
+                <li class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Detailed improvement roadmap
+                </li>
+                <li class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Personalized style recommendations
+                </li>
+                <li class="flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Expert grooming & styling tips
+                </li>
+            </ul>
+
+            <p class="text-sm text-gray-500 italic">
+                Sign in below to unlock your full potential and start your transformation journey today!
+            </p>
+        </div>
+    </div>
+
+    <!-- Login with Google -->
     <div class="mt-5">
         <a href="{{ url_for('main.login') }}" class="w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800">
             <svg class="w-4 h-auto" width="46" height="47" viewBox="0 0 46 47" fill="none">

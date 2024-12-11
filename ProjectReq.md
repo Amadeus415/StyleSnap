@@ -11,3 +11,21 @@
 5. Auth: Google auth
 6. AI: xAI api
 7. Products: Amazon Prod Adv API
+
+# To do:
+1. Setup & Infrastructure
+   - [x] Add upload from folder functionality
+   - [x] Some kind of storage cleanup
+   - [ ] clean product screen
+   - [ ] mobile tests
+   - [ ] Add max file size
+   - [ ] x
+
+2. AI API
+   - [ ] Map out plan for AI system
+   - [ ] add into app utility
+
+3. Potential Prolblems
+ - [] storeage cleanup with simaltaneous users
+    - Solution: switch to S3 with automatic cleanup every day
+    - Or use scheduler 

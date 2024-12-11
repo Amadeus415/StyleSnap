@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!stream) {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: 'environment' }, 
+                    video: { facingMode: 'user' }, 
                     audio: false 
                 });
                 video.srcObject = stream;

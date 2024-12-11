@@ -6,7 +6,12 @@ import os
 from config import Config
 from functools import wraps
 import uuid # for unique filename
-from .utils import load_amazon_products
+import base64
+from werkzeug.utils import secure_filename
+
+#My utils
+from .utils import load_amazon_products, cleanup_old_photos
+from .xAI_utils import analyze_face
 
 
 # Allow HTTP for local development
@@ -51,30 +56,63 @@ def camera():
 def results():
     """Route for results page"""
     if request.method == 'POST':
-        photo_data = request.form.get('photo')
-        if photo_data:
-            # Generate unique filename
-            filename = f"{uuid.uuid4()}.jpg"
-            photo_path = os.path.join(current_app.static_folder, 'photos', filename)
-            
-            # Ensure photos directory exists
-            os.makedirs(os.path.join(current_app.static_folder, 'photos'),mode=0o755, exist_ok=True)
+        # Check which type of upload we're dealing with
+        if 'photo' in request.files:
+            # This is a file upload
+            file = request.files['photo']
+            if file.filename != '':
+                # Generate unique filename
+                filename = f"{uuid.uuid4()}.jpg"
+                photo_path = os.path.join(current_app.static_folder, 'photos', filename)
+                
+                # Save the uploaded file directly
+                file.save(photo_path)
+                
+                photo_url = url_for('static', filename=f'photos/{filename}')
+                session['last_photo'] = photo_url
 
-            
-            # Save base64 image data (remove the data:image/jpeg;base64, prefix)
-            import base64
-            photo_data = photo_data.split(',')[1]
-            with open(photo_path, 'wb') as f:
-                f.write(base64.b64decode(photo_data))
+                # Analyze the face
+                analysis_results = analyze_face(photo_path)
+                session['face_analysis'] = analysis_results
 
-            # Create URL for the saved photo
-            photo_url = url_for('static', filename=f'photos/{filename}')
-            
-            # Store only the filename in session
-            session['last_photo'] = photo_url
-            
-            return render_template('results.html', photo_data=photo_url)
+                # Cleanup old photos
+                cleanup_old_photos()
+
+                return render_template('results.html', photo_data=photo_url, analysis=analysis_results)
+
+        elif 'photo' in request.form:
+            # This is a camera capture (base64 data)
+            photo_data = request.form.get('photo')
+            if photo_data and photo_data.startswith('data:image/jpeg;base64,'):
+                # Generate unique filename
+                filename = f"{uuid.uuid4()}.jpg"
+                photo_path = os.path.join(current_app.static_folder, 'photos', filename)
+                
+                # Ensure photos directory exists
+                os.makedirs(os.path.join(current_app.static_folder, 'photos'), 
+                          mode=0o755, exist_ok=True)
+                
+                # Save base64 image data
+                photo_data = photo_data.split(',')[1]
+                with open(photo_path, 'wb') as f:
+                    f.write(base64.b64decode(photo_data))
+
+                
+                photo_url = url_for('static', filename=f'photos/{filename}')
+                session['last_photo'] = photo_url
+
+                # Analyze the face
+                analysis_results = analyze_face(photo_path)
+                session['face_analysis'] = analysis_results
+
+                # Cleanup old photos
+                cleanup_old_photos()
+
+                return render_template('results.html', photo_data=photo_url, analysis=analysis_results)
+
     return redirect(url_for('main.camera'))
+                
+    
 
 
 @main.route('/login')
@@ -145,4 +183,11 @@ def dashboard():
     return render_template('dashboard.html', 
                          user_info=session['user_info'],
                          last_photo=session.get('last_photo'),
-                         products=amazon_products)
+                         products=amazon_products,
+                         analysis=session.get('face_analysis'))
+
+
+@main.route('/pricing')
+def pricing():
+    """Route for pricing page"""
+    return render_template('settings/pricing.html')
