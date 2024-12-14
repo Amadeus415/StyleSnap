@@ -2,70 +2,151 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+
 <!-- Hero section with background image -->
-<div class="hero min-h-screen" style="background-image: url('https://images.unsplash.com/photo-1444210971048-6130cf0c46cf?q=80&w=2073&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+<div class="hero min-h-screen" style="background-image: url('https://files.oaiusercontent.com/file-AdHdcSanQcAjxotAkoSCz8?se=2024-12-14T01%3A42%3A03Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Dee161b4d-b148-40cc-bea5-12ba2ae10d48.webp&sig=W7rM0QUT9s99AdYXzQ4jB2oa4ztZ/rVU5dlFDwZyI10%3D');">
+
   <div class="hero-overlay bg-opacity-60"></div>
   <div class="hero-content text-center text-neutral-content">
+    
     <div class="max-w-md">
-      <h1 class="mb-5 text-8xl font-bold text-black">Look Better, More Friends</h1>
-      <p class="mb-5 text-2xl font-bold text-white">Get instant AI-powered fashion feedback and personalized style recommendations. Transform your wardrobe with smart insights.</p>
-      <div class="space-y-4">
+      <h2 class="mb-5 text-6xl font-bold text-green-400 font-inter">Score 99</h2>
+      <h1 class="mb-5 text-6xl font-bold text-white">Maximize Your Dating Appeal</h1>
+      <p class="mb-5 text-2xl font-bold text-white">With AI from the most cutting edge AI Foundational Models</p>
 
-        <a class="group inline-block rounded bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-[2px] text-black focus:outline-none focus:ring active:text-opacity-75 hover:scale-105 transition-transform duration-300" href="{{url_for('main.camera')}}" >
-            <span class="block rounded-sm px-8 py-3 text-sm font-medium bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 group-hover:bg-gradient-to-l">
-                Get Scan
+        <a class="group inline-block rounded bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 p-[2px] text-black focus:outline-none focus:ring active:text-opacity-75 hover:scale-125 transition-transform duration-300" href="{{url_for('main.camera')}}" >
+            <span class="block rounded-sm px-28 py-4 text-sm font-medium bg-gradient-to-r from-pink-500 via-blue-400 to-purple-500 group-hover:bg-gradient-to-l">
+                Get Your Rating 📷
             </span> 
         </a>
-        <!-- <a href="{{ url_for('main.camera') }}" class="btn btn-primary">Take Photo</a>
-        <button class="btn btn-outline btn-white">Learn More</button> -->
       </div>
+    </div>
+  </div>    
+</div>
+
+
+<!--Logos section: xAI, Google Gemini, OpenAI, Hacker News-->
+<div class="py-12 bg-base-100">
+    <div class="max-w-2xl mx-auto px-4">
+        <h3 class="text-xl font-bold text-center mb-6">Powered by Leading AI Companies</h3>
+        <div class="flex justify-center items-center gap-8">
+            <img src="{{ url_for('static', filename='assets/company_logos/xai.svg') }}" alt="xAI" class="w-1/12 h-auto">
+            <img src="{{ url_for('static', filename='assets/company_logos/openai.png') }}" alt="OpenAI" class="w-1/6 h-auto">
+        </div>
+    </div>
+</div>
+<div class="text-center mt-8">
+  <p class="text-2xl text-gray-600">Trained by top AI engineers out of San Francisco focusing on Facial Analysis</p>
+</div>
+
+<!-- Trained on data from: Andrew Huberman, Peter Attia, Dr. Rhonda Patrick, Dr. Rangan Chatterjee, and more-->
+<div class="py-12 bg-base-100">
+  <div class="max-w-2xl mx-auto px-4">
+    <h3 class="text-xl font-bold text-center mb-6">Trained on Data from Leading Health Experts</h3>
+    <div class="flex justify-center items-center gap-8">
+      <img src="{{ url_for('static', filename='assets/podcasts/huberman.jpg') }}" alt="Andrew Huberman" class="w-1/4 h-auto">
+      <img src="{{ url_for('static', filename='assets/podcasts/attia.jpg') }}" alt="Peter Attia" class="w-1/2 h-auto">
+      <img src="{{ url_for('static', filename='assets/podcasts/Rhonda.jpg') }}" alt="Dr. Rhonda Patrick" class="w-1/4 h-auto">
+      <img src="{{ url_for('static', filename='assets/podcasts/chatterjee.jpg') }}" alt="Dr. Rangan Chatterjee" class="w-1/4 h-auto">
     </div>
   </div>
 </div>
 
-<!-- Features section -->
+<!-- Image showing facial analysis-->
+<div class="py-24 bg-base-50">
+    <div class="max-w-6xl mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-6">
+                <h3 class="text-3xl font-bold">Advanced AI-Powered Analysis</h3>
+                <div class="space-y-4">
+                    <p class="text-gray-600">Our cutting-edge AI performs comprehensive facial analysis using:</p>
+                    <ul class="space-y-3 text-gray-600">
+                        <li class="flex items-center gap-2">
+                            <span class="text-primary">•</span>
+                            3D Vector Mapping for precise facial structure detection
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-primary">•</span>
+                            Geometric Analysis of facial symmetry and proportions
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-primary">•</span>
+                            Neural Network-based feature extraction
+                        </li>
+                        <li class="flex items-center gap-2">
+                            <span class="text-primary">•</span>
+                            Multi-point facial landmark detection
+                        </li>
+                    </ul>
+                    <div class="mt-12">
+                      <a class="group inline-block rounded bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 p-[2px] text-black focus:outline-none focus:ring active:text-opacity-75 hover:scale-125 transition-transform duration-300 mt-20" href="{{url_for('main.camera')}}" >
+                        <span class="block rounded-sm px-28 py-4 text-sm font-medium bg-gradient-to-r from-pink-500 via-blue-400 to-purple-500 group-hover:bg-gradient-to-l">
+                            Get Your Rating
+                        </span> 
+                    </a>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-2xl">
+                <img src="{{ url_for('static', filename='assets/face_box.png') }}" alt="Facial Analysis" class="w-full h-auto">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Benefits Section -->
 <div class="py-24 bg-base-100">
   <div class="max-w-6xl mx-auto px-4">
-    <h2 class="text-4xl font-bold text-center mb-16">How It Works</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <!-- Feature 1 -->
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body items-center text-center">
-          <div class="text-4xl mb-4">📸</div>
-          <h3 class="card-title">Snap a Photo</h3>
-          <p>Take a quick photo of your outfit using our easy-to-use camera interface.</p>
-        </div>
+
+      <h2 class="text-4xl font-bold text-center mb-16">Become Hotter with AI</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Benefit 1 -->
+          <div class="text-center p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <div class="text-5xl mb-4">💝</div>
+              <h3 class="text-xl font-bold mb-2">Get More Dates</h3>
+              <p class="text-gray-600">Make a lasting first impression and attract the right person</p>
+          </div>
+
+          <!-- Benefit 2 -->
+          <div class="text-center p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <div class="text-5xl mb-4">💼</div>
+              <h3 class="text-xl font-bold mb-2">Land Better Jobs</h3>
+              <p class="text-gray-600">Present yourself professionally and advance your career</p>
+          </div>
+
+          <!-- Benefit 3 -->
+          <div class="text-center p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <div class="text-5xl mb-4">🤝</div>
+              <h3 class="text-xl font-bold mb-2">Expand Your Network</h3>
+              <p class="text-gray-600">Build meaningful connections and lasting friendships</p>
+          </div>
+
+          <!-- Benefit 4 -->
+          <div class="text-center p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+              <div class="text-5xl mb-4">⭐</div>
+              <h3 class="text-xl font-bold mb-2">Boost Confidence</h3>
+              <p class="text-gray-600">Feel your best and radiate self-assurance daily</p>
+          </div>
       </div>
-      <!-- Feature 2 -->
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body items-center text-center">
-          <div class="text-4xl mb-4">🤖</div>
-          <h3 class="card-title">AI Analysis</h3>
-          <p>Our AI analyzes your style and provides detailed feedback and suggestions.</p>
-        </div>
+
+      <!-- Social Proof Image -->
+      <div class="mt-16 flex justify-center">
+          <img src="{{ url_for('static', filename='assets/guy_getting_hit_on.jpg') }}" alt="Success Story" class="rounded-lg shadow-lg max-w-2xl w-full">
       </div>
-      <!-- Feature 3 -->
-      <div class="card bg-base-100 shadow-xl">
-        <div class="card-body items-center text-center">
-          <div class="text-4xl mb-4">✨</div>
-          <h3 class="card-title">Get Recommendations</h3>
-          <p>Receive personalized product recommendations that match your style.</p>
-        </div>
+
+      <div class="mt-16 flex justify-center">
+        <a class="group inline-block rounded bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 p-[2px] text-black focus:outline-none focus:ring active:text-opacity-75 hover:scale-125 transition-transform duration-300" href="{{url_for('main.camera')}}" >
+          <span class="block rounded-sm px-28 py-4 text-sm font-medium bg-gradient-to-r from-pink-500 via-blue-400 to-purple-500 group-hover:bg-gradient-to-l">
+              Get Your Rating 📷
+          </span> 
+        </a>
       </div>
-    </div>
+
   </div>
 </div>
 
-<!-- CTA section -->
-<div class="bg-primary text-primary-content">
-  <div class="hero min-h-[400px]">
-    <div class="hero-content text-center">
-      <div class="max-w-md">
-        <h2 class="text-3xl font-bold mb-4">Ready to Transform Your Style?</h2>
-        <p class="mb-6">Join thousands of users who have improved their fashion game with StyleSnap.</p>
-        <a href="{{ url_for('main.camera') }}" class="btn btn-secondary">Get Started</a>
-      </div>
-    </div>
-  </div>
-</div>
+
 {% endblock %}

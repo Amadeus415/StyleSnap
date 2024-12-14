@@ -16,16 +16,20 @@
 1. Setup & Infrastructure
    - [x] Add upload from folder functionality
    - [x] Some kind of storage cleanup
-   - [ ] clean product screen
-   - [ ] mobile tests
    - [ ] Add max file size
    - [ ] x
 
 2. AI API
-   - [ ] Map out plan for AI system
-   - [ ] add into app utility
+   - [ ] Improve the Prompt
+   - [x] Map out plan for AI system
+   - [x] add into app utility
 
 3. Potential Prolblems
  - [] storeage cleanup with simaltaneous users
-    - Solution: switch to S3 with automatic cleanup every day
-    - Or use scheduler 
+    - Solution: switch to S3 with scheduled cleanup
+
+ - [] Save progress before implementing sqllite, and s3
+
+
+4. Future
+   - [ ] Look into model improvement
