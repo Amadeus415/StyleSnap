@@ -1,31 +1,20 @@
-from flask import Flask
-from app.routes import main
-from config import Config
+from app import create_app, db
 import ssl
-import os
 import socket
 
-def create_app():
-    app = Flask(__name__, template_folder='app/templates', static_folder='app/static')
-    app.config.from_object(Config)
-    
-    # Set secret key for sessions
-    app.secret_key = Config.SECRET_KEY
-    
-    # Register blueprints
-    app.register_blueprint(main)
-    
-    return app
+app = create_app()
+
+# Push application context
+ctx = app.app_context()
+ctx.push()
 
 if __name__ == '__main__':
-    app = create_app()
-
     # Get local IP address
     hostname = socket.gethostname()
     local_ip = socket.gethostbyname(hostname)
     print(f"Local IP Address: {local_ip}")
     
-    # Create SSL context with verification flags
+    # Create SSL context
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
     context.check_hostname = False
     context.verify_mode = ssl.CERT_NONE

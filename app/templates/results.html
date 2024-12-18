@@ -10,18 +10,18 @@
         
         <div class="text-2xl font-semibold text-center mb-6">
             <span class="text-gray-600">Potential Score: </span>
-            <span class="text-green-500">{{ analysis.pscore }}</span>
+            <span class="text-green-500">{{ analysis.potential_score }}</span>
         </div>
 
         <div class="text-lg text-center mb-8 text-gray-700">
-            You rank in top <span class="font-bold text-primary">{{ analysis.age_percentile }}</span> of men your age and gender
+            You rank in top <span class="font-bold text-primary">{{ analysis.age_percentage }}</span> of men your age and gender
         </div>
 
         <div class="grid grid-cols-3 gap-6">
             <!-- Masculinity -->
             <div class="p-4 bg-gray-50 rounded-lg text-center">
-                <h3 class="font-medium text-gray-600">Masculinity</h3>
-                <div class="text-2xl font-bold text-primary">{{ analysis.masculinity }}</div>
+                <h3 class="font-medium text-gray-600">Confidence</h3>
+                <div class="text-2xl font-bold text-primary">{{ analysis.confidence }}</div>
             </div>
             
             <!-- Skin Quality -->
@@ -81,12 +81,12 @@
     <!-- Potential Score Section -->
     <div class="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg shadow-sm border border-blue-100">
         <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-gray-800">Your Potential Score: {{ analysis.pscore }}</h3>
-            <span class="text-sm text-blue-600 font-medium">{{ analysis.age_percentile }}</span>
+            <h3 class="text-xl font-bold text-gray-800">Your Potential Score: {{ analysis.potential_score }}</h3>
+            <span class="text-sm text-blue-600 font-medium">{{ analysis.age_percentage }}</span>
         </div>
         
         <p class="text-gray-700 mb-4">
-            Want to discover exactly how to reach your maximum potential score of {{ analysis.pscore }}? Our premium insights reveal personalized strategies to enhance your appearance and boost your social success.
+            Want to discover exactly how to reach your maximum potential score of {{ analysis.potential_score }}? Our premium insights reveal personalized strategies to enhance your appearance and boost your social success.
         </p>
 
         <div class="bg-white p-4 rounded-md shadow-sm">

@@ -1,11 +1,7 @@
-# set up sql lite
-
-from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.sqlite import JSON  # For SQLite
-
-db = SQLAlchemy()
+from sqlalchemy.dialects.sqlite import JSON
+from . import db  # Import db from __init__.py directly
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,7 +19,6 @@ class UserPhoto(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     s3_key = db.Column(db.String(200), nullable=False)  # e.g., "users/123/profile.jpg"
     upload_date = db.Column(db.DateTime, default=func.now())
-    photo_type = db.Column(db.String(50))  # e.g., 'profile', 'analysis'
     is_active = db.Column(db.Boolean, default=True)
 
 

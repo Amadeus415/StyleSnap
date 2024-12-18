@@ -13,4 +13,7 @@ class Config:
     GOOGLE_REDIRECT_URI = os.getenv('GOOGLE_REDIRECT_URI')
     GOOGLE_SCOPES = os.getenv('GOOGLE_SCOPES', '').split(',')
 
-    
+    GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI', 'sqlite:///facex.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False

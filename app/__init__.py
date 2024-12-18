@@ -1,21 +1,36 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from config import Config
 
+# Initialize extensions
+db = SQLAlchemy()
+migrate = Migrate()
+
 def create_app(test_config=None):
-    app = Flask(__name__, instance_relative_config=True)
+    app = Flask(__name__)
     
+    # Load config
     if test_config is None:
-        # load the instance config, if it exists, when not testing
         app.config.from_object(Config)
     else:
-        # load the test config if passed in
         app.config.update(test_config)
     
-    # Initialize extensions
-    # db.init_app(app)
+    # Initialize extensions with app
+    db.init_app(app)
+    migrate.init_app(app, db)
     
-    # Register blueprints
-    from app import routes
-    app.register_blueprint(routes.main)
+    # Import blueprints
+    from .routes import main
+    app.register_blueprint(main)
     
-    return app 
+    # Push an application context
+    ctx = app.app_context()
+    ctx.push()
+    
+    # Import models and create tables
+    with app.app_context():
+        from . import models
+        db.create_all()
+    
+    return app

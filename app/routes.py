@@ -6,12 +6,13 @@ import os
 from config import Config
 from functools import wraps
 import uuid # for unique filename
-import base64
-from werkzeug.utils import secure_filename
+from sqlalchemy.sql import func
+#db
+from . import db
+from .models import User, UserPhoto, FacialAnalysis
 
 #My utils
-from .utils import load_amazon_products, cleanup_old_photos
-from .xAI_utils import analyze_face
+from .utils import get_or_create_user, save_photo, save_base64_photo, save_and_analyze_photo, cleanup_old_photos, load_amazon_products
 
 
 # Allow HTTP for local development
@@ -56,59 +57,41 @@ def camera():
 def results():
     """Route for results page"""
     if request.method == 'POST':
-        # Check which type of upload we're dealing with
-        if 'photo' in request.files:
-            # This is a file upload
-            file = request.files['photo']
-            if file.filename != '':
-                # Generate unique filename
-                filename = f"{uuid.uuid4()}.jpg"
-                photo_path = os.path.join(current_app.static_folder, 'photos', filename)
-                
-                # Save the uploaded file directly
-                file.save(photo_path)
-                
-                photo_url = url_for('static', filename=f'photos/{filename}')
-                session['last_photo'] = photo_url
+        try:
+            # Get or create user
+            user = get_or_create_user()
+            
+            # Handle both file upload and camera capture
+            filename = None
+            photo_path = None
+            
+            if 'photo' in request.files:
+                # Handle file upload
+                file = request.files['photo']
+                if file.filename != '':
+                    filename = f"{uuid.uuid4()}.jpg"
+                    photo_path = save_photo(file, filename)
+                    
+            elif 'photo' in request.form:
+                # Handle camera capture
+                photo_data = request.form.get('photo')
+                if photo_data and photo_data.startswith('data:image/jpeg;base64,'):
+                    filename = f"{uuid.uuid4()}.jpg"
+                    photo_path = save_base64_photo(photo_data, filename)
 
-                # Analyze the face
-                analysis_results = analyze_face(photo_path)
-                session['face_analysis'] = analysis_results
-
-                # Cleanup old photos
+            if photo_path:
+                # Save to database and analyze
+                analysis_results = save_and_analyze_photo(user.id, filename, photo_path)
+                
+                # Cleanup and return results
                 cleanup_old_photos()
+                return render_template('results.html', 
+                                    photo_data=url_for('static', filename=f'photos/{filename}'), 
+                                    analysis=analysis_results)
 
-                return render_template('results.html', photo_data=photo_url, analysis=analysis_results)
-
-        elif 'photo' in request.form:
-            # This is a camera capture (base64 data)
-            photo_data = request.form.get('photo')
-            if photo_data and photo_data.startswith('data:image/jpeg;base64,'):
-                # Generate unique filename
-                filename = f"{uuid.uuid4()}.jpg"
-                photo_path = os.path.join(current_app.static_folder, 'photos', filename)
-                
-                # Ensure photos directory exists
-                os.makedirs(os.path.join(current_app.static_folder, 'photos'), 
-                          mode=0o755, exist_ok=True)
-                
-                # Save base64 image data
-                photo_data = photo_data.split(',')[1]
-                with open(photo_path, 'wb') as f:
-                    f.write(base64.b64decode(photo_data))
-
-                
-                photo_url = url_for('static', filename=f'photos/{filename}')
-                session['last_photo'] = photo_url
-
-                # Analyze the face
-                analysis_results = analyze_face(photo_path)
-                session['face_analysis'] = analysis_results
-
-                # Cleanup old photos
-                cleanup_old_photos()
-
-                return render_template('results.html', photo_data=photo_url, analysis=analysis_results)
+        except Exception as e:
+            current_app.logger.error(f"Error in results route: {str(e)}")
+            return redirect(url_for('main.camera'))
 
     return redirect(url_for('main.camera'))
                 
@@ -163,6 +146,22 @@ def oauth2callback():
             'name': id_info.get('name'),
             'picture': id_info.get('picture')
         }
+
+        # Update or create user in database
+        user = User.query.filter_by(email=id_info.get('email')).first()
+        if user:
+            # Update existing user's last login
+            user.last_login = func.now()
+        else:
+            # Create new user
+            user = User(
+                email=id_info.get('email'),
+                last_login=func.now(),
+                subscription_status='free'
+            )
+            db.session.add(user)
+        
+        db.session.commit()
         
         # Redirect to the stored 'next' URL or main page
         next_page = session.pop('next', url_for('main.dashboard'))
