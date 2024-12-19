@@ -16,37 +16,25 @@
     <!-- Latest Photo with Score -->
     <div class="bg-white rounded-lg shadow-lg p-6 my-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Latest Style Analysis</h2>
-        {% if last_photo %}
+        {% if photo_url and analysis %}
             <div class="grid md:grid-cols-2 gap-8">
                 <!-- Photo Display -->
-                <div class="rounded-lg overflow-hidden">
-                    <img src="{{ last_photo }}" alt="Your latest photo" class="w-full h-auto object-cover">
+                <div class="rounded-lg overflow-hidden shadow-lg">
+                    <img src="{{ photo_url }}" alt="Your latest photo" class="w-full h-auto object-cover">
                 </div>
                 <!-- Score and Stats -->
                 <div class="flex flex-col justify-center space-y-8">
                     <!-- Overall Score -->
                     <div class="text-center">
                         <h3 class="text-lg font-semibold text-black">Overall Score</h3>
-                        <div class="text-5xl font-bold text-red-500">{{ analysis.score }}</div>
-                    </div>
-
-                    <!-- Potential Score -->
-                    <div class="text-center">
-                        <h3 class="text-lg font-semibold text-black">Potential Score</h3>
-                        <div class="text-7xl font-bold bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 bg-clip-text text-transparent">{{ analysis.pscore }}</div>
+                        <div class="text-5xl font-bold text-primary">{{ analysis.score }}</div>
                     </div>
 
                     <!-- Stats Grid -->
-                    <div class="grid grid-cols-3 gap-4">
-                        <!-- Masculinity -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Skin -->
                         <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <div class="font-semibold text-gray-900">Masculinity</div>
-                            <div class="text-xl text-primary">{{ analysis.masculinity }}</div>
-                        </div>
-                        
-                        <!-- Skin Quality -->
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <div class="font-semibold text-gray-900">Skin Quality</div>
+                            <div class="font-semibold text-gray-900">Skin</div>
                             <div class="text-xl text-primary">{{ analysis.skin }}</div>
                         </div>
                         
@@ -55,17 +43,11 @@
                             <div class="font-semibold text-gray-900">Jawline</div>
                             <div class="text-xl text-primary">{{ analysis.jawline }}</div>
                         </div>
-
+                        
                         <!-- Hair -->
                         <div class="text-center p-4 bg-gray-50 rounded-lg">
                             <div class="font-semibold text-gray-900">Hair</div>
                             <div class="text-xl text-primary">{{ analysis.hair }}</div>
-                        </div>
-                        
-                        <!-- Style -->
-                        <div class="text-center p-4 bg-gray-50 rounded-lg">
-                            <div class="font-semibold text-gray-900">Style</div>
-                            <div class="text-xl text-primary">{{ analysis.style }}</div>
                         </div>
                         
                         <!-- Smile -->
@@ -75,6 +57,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
         {% else %}
             <div class="text-center py-12">
                 <p class="text-gray-600 mb-4">No photos analyzed yet.</p>

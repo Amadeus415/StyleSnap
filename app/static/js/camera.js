@@ -46,10 +46,16 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.height = video.videoHeight;
         
         // Draw video frame to canvas
-        canvas.getContext('2d').drawImage(video, 0, 0);
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
         
-        // Get image data and update preview
-        const imageDataUrl = canvas.toDataURL('image/jpeg');
+        // Get image data as JPEG
+        const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        
+        // Log the first few characters of the base64 data for debugging
+        console.log('Image data starts with:', imageDataUrl.substring(0, 50));
+        
+        // Update form and preview
         photoDataInput.value = imageDataUrl;
         photoPreview.src = imageDataUrl;
         
@@ -64,5 +70,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         videoContainer.classList.add('hidden');
         cameraButton.textContent = 'Open Camera';
+    });
+
+    // Add form submission handler to validate data before sending
+    uploadForm.addEventListener('submit', function(e) {
+        const photoData = photoDataInput.value;
+        if (!photoData.startsWith('data:image/jpeg;base64,')) {
+            e.preventDefault();
+            console.error('Invalid image data format');
+            alert('Invalid image data format. Please try capturing the photo again.');
+        }
     });
 });

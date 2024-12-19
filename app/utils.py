@@ -1,20 +1,21 @@
-
-from flask import current_app, session
+""" utils.py - utility functions for routes.py"""
+from flask import current_app, session, url_for
+import json
+import os
+import uuid
+import boto3
+import base64
 
 #db
 from . import db
 from .models import User, UserPhoto, FacialAnalysis
 
-# functions
-import json
-import os
-import uuid
-import base64
-from flask import current_app, session, url_for
-
-
 #AI
 from .AI_utils import analyze_face
+
+#AWS
+from .s3_utils import upload_file_to_s3, delete_file_from_s3, get_s3_client
+
 
 def load_amazon_products():
     """Load Amazon products from JSON file"""
@@ -26,18 +27,6 @@ def load_amazon_products():
     except Exception as e:
         print(f"Error loading products: {e}")
         return []
-    
-
-def cleanup_old_photos():
-    """Cleanup old photos from static/photos directory except for current one"""
-    photos_dir = os.path.join(current_app.static_folder, 'photos')
-    current_photo = session.get('last_photo')
-    if current_photo:
-        # Remove all photos except the current one
-        for filename in os.listdir(photos_dir):
-            if filename != os.path.basename(current_photo):
-                os.remove(os.path.join(photos_dir, filename))
-
 
 
 def get_or_create_user():
@@ -66,47 +55,104 @@ def get_or_create_user():
         db.session.rollback()
         raise
 
-def save_photo(file, filename):
-    """Save uploaded file"""
-    photo_path = os.path.join(current_app.static_folder, 'photos', filename)
-    os.makedirs(os.path.dirname(photo_path), exist_ok=True)
-    file.save(photo_path)
-    return photo_path
+def save_photo(file, user_id):
+    """Upload file directly to S3"""
+    s3_key, s3_url = upload_file_to_s3(file, user_id, is_base64=False)
+    return s3_key, s3_url
 
-def save_base64_photo(photo_data, filename):
-    """Save base64 photo data"""
-    photo_path = os.path.join(current_app.static_folder, 'photos', filename)
-    os.makedirs(os.path.dirname(photo_path), exist_ok=True)
-    
-    photo_data = photo_data.split(',')[1]
-    with open(photo_path, 'wb') as f:
-        f.write(base64.b64decode(photo_data))
-    return photo_path
+def save_base64_photo(photo_data, user_id):
+    """Upload base64 photo directly to S3"""
+    s3_key, s3_url = upload_file_to_s3(photo_data, user_id, is_base64=True)
+    return s3_key, s3_url
 
-def save_and_analyze_photo(user_id, filename, photo_path):
-    """Save photo to database and run analysis"""
-    # Create photo record
-    photo = UserPhoto(
-        user_id=user_id,
-        s3_key=filename,
-        is_active=True
-    )
-    db.session.add(photo)
-    db.session.flush()
+def save_and_analyze_photo(user_id, file_data, is_base64=False):
+    """Save photo to S3 and analyze it"""
+    try:
+        # Upload directly to S3
+        current_app.logger.debug("Starting S3 upload...")
+        s3_key, s3_url = upload_file_to_s3(file_data, user_id, is_base64)
+        current_app.logger.debug(f"S3 upload complete. URL: {s3_url}")
+        
+        # Create photo record
+        photo = UserPhoto(
+            user_id=user_id,
+            s3_key=s3_key,
+            s3_url=s3_url,
+            is_active=True
+        )
+        db.session.add(photo)
+        db.session.flush()
+        current_app.logger.debug(f"Photo record created with ID: {photo.id}")
 
-    # Analyze and save results
-    analysis_results = analyze_face(photo_path)
-    analysis = FacialAnalysis(
-        user_id=user_id,
-        photo_id=photo.id,
-        analysis_data=analysis_results,
-        score=analysis_results.get('score', 0)
-    )
-    db.session.add(analysis)
-    db.session.commit()
+        # Get the binary data for analysis
+        if is_base64:
+            # If it's base64 data, decode it
+            if isinstance(file_data, str):
+                if 'data:image' in file_data and 'base64,' in file_data:
+                    file_data = file_data.split('base64,')[1]
+                file_data = file_data.strip().replace('\n', '').replace('\r', '')
+                image_data = base64.b64decode(file_data)
+            else:
+                raise ValueError("Base64 data must be a string")
+        else:
+            # If it's a file object, read it
+            image_data = file_data.read()
+            file_data.seek(0)  # Reset file pointer for S3 upload
+        
+        # Analyze directly from memory
+        current_app.logger.debug("Starting face analysis...")
+        analysis_results = analyze_face(image_data)
+        current_app.logger.debug("Face analysis complete")
+        
+        # Save analysis results
+        analysis = FacialAnalysis(
+            user_id=user_id,
+            photo_id=photo.id,
+            analysis_data=analysis_results,
+            score=analysis_results.get('score', 0)
+        )
+        db.session.add(analysis)
+        db.session.commit()
+        current_app.logger.debug("Analysis results saved to database")
 
-    # Store in session
-    session['last_photo'] = url_for('static', filename=f'photos/{filename}')
-    session['face_analysis'] = analysis_results
+        # Store in session
+        session['last_photo'] = s3_url
+        session['face_analysis'] = analysis_results
+        current_app.logger.debug(f"Session updated with photo URL: {s3_url}")
 
-    return analysis_results
+        # Return both the analysis results and the photo URL
+        result = {
+            'analysis': analysis_results,
+            'photo_url': s3_url
+        }
+        current_app.logger.debug(f"Returning result with photo URL: {s3_url}")
+        return result
+        
+    except Exception as e:
+        current_app.logger.error(f"Error in save_and_analyze_photo: {str(e)}")
+        db.session.rollback()
+        raise
+
+def cleanup_old_photos():
+    """Cleanup old photos from S3"""
+    try:
+        # Get current user's photos except the latest
+        if 'user_info' in session:
+            user = User.query.filter_by(email=session['user_info']['email']).first()
+            if user:
+                old_photos = UserPhoto.query.filter_by(
+                    user_id=user.id,
+                    is_active=True
+                ).order_by(UserPhoto.upload_date.desc()).offset(1).all()
+
+                for photo in old_photos:
+                    # Delete from S3
+                    delete_file_from_s3(photo.s3_key)
+                    # Mark as inactive in database
+                    photo.is_active = False
+                
+                db.session.commit()
+                
+    except Exception as e:
+        current_app.logger.error(f"Error in cleanup_old_photos: {str(e)}")
+        db.session.rollback()

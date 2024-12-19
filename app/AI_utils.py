@@ -30,16 +30,21 @@ model_name = "gemini-1.5-flash"
 model = genai.GenerativeModel(model_name=model_name)
 
 
-def analyze_face(image_path):
+def analyze_face(image_data):
     """
     Function to analyze facial features using xAI API
+    image_data can be either a file path (str) or binary data (bytes)
     """
     # Convert image to base64
-    def encode_image(image_path):
-        with open(image_path, "rb") as image_file:
-            return base64.b64encode(image_file.read()).decode("utf-8")
-    
-    base64_image = encode_image(image_path)
+    if isinstance(image_data, str) and os.path.isfile(image_data):
+        # If image_data is a file path
+        with open(image_data, "rb") as image_file:
+            base64_image = base64.b64encode(image_file.read()).decode("utf-8")
+    elif isinstance(image_data, bytes):
+        # If image_data is binary data
+        base64_image = base64.b64encode(image_data).decode("utf-8")
+    else:
+        raise ValueError("Invalid image data format")
     
     model_name = "gemini-1.5-flash"
     #Choose a Gemini model.
@@ -61,7 +66,7 @@ def analyze_face(image_path):
     - description: Object with "standout" and "weaknesses" arrays
     - image_quality: Object with quality assessment details
 
-    Please ensure all numeric scores are provided as integers between 0 and 100.""" 
+    Please ensure all numeric scores are provided as integers between 0 and 100."""
 
     response = model.generate_content([prompt, base64_image]
                                   , generation_config=genai.GenerationConfig(temperature=0.1, response_mime_type="application/json" ))

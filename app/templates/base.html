@@ -21,6 +21,14 @@
                 <a href="{{ url_for('main.landing') }}" class="btn btn-ghost text-2xl font-bold">FaceX</a>
             </div>
 
+            <div class="flex-none">
+                {% if session.get('user_info') %}
+                <a href="{{ url_for('main.logout') }}" class="btn btn-ghost">Logout</a>
+                {% else %}
+                <a href="{{ url_for('main.login') }}" class="btn btn-ghost">Login</a>
+                {% endif %}
+            </div>
+        
             <!-- Menu dropdown -->
             <div class="flex-none">
                 <details class="dropdown dropdown-hover dropdown-end">

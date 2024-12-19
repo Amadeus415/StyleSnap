@@ -16,18 +16,19 @@ class User(db.Model):
 
 class UserPhoto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    s3_key = db.Column(db.String(200), nullable=False)  # e.g., "users/123/profile.jpg"
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # Foreign key to User
+    s3_key = db.Column(db.String(200), nullable=False)  # S3 path
+    s3_url = db.Column(db.String(500), nullable=False)  # Full S3 URL
     upload_date = db.Column(db.DateTime, default=func.now())
     is_active = db.Column(db.Boolean, default=True)
 
 
 class FacialAnalysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    photo_id = db.Column(db.Integer, db.ForeignKey('user_photo.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) # Foreign key to User
+    photo_id = db.Column(db.Integer, db.ForeignKey('user_photo.id'), nullable=False) # Foreign key to UserPhoto
     analysis_data = db.Column(JSON, nullable=False)  # Stores AI output
-    created_at = db.Column(db.DateTime, default=func.now())
+    created_at = db.Column(db.DateTime, default=func.now()) 
     score = db.Column(db.Float)  # Optional: store main score for easy querying
     
     # Relationships

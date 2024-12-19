@@ -1,9 +1,12 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
+import boto3
+from botocore.config import Config as BotoConfig
+from flask import Blueprint, render_template, request, redirect, url_for, session
+from config import Config
+
 from google_auth_oauthlib.flow import Flow
 from google.oauth2 import id_token
 from google.auth.transport import requests
 import os
-from config import Config
 from functools import wraps
 import uuid # for unique filename
 from sqlalchemy.sql import func
@@ -13,6 +16,7 @@ from .models import User, UserPhoto, FacialAnalysis
 
 #My utils
 from .utils import get_or_create_user, save_photo, save_base64_photo, save_and_analyze_photo, cleanup_old_photos, load_amazon_products
+
 
 
 # Allow HTTP for local development
@@ -62,35 +66,57 @@ def results():
             user = get_or_create_user()
             
             # Handle both file upload and camera capture
-            filename = None
-            photo_path = None
-            
             if 'photo' in request.files:
-                # Handle file upload
                 file = request.files['photo']
                 if file.filename != '':
-                    filename = f"{uuid.uuid4()}.jpg"
-                    photo_path = save_photo(file, filename)
+                    result = save_and_analyze_photo(user.id, file, is_base64=False)
                     
             elif 'photo' in request.form:
-                # Handle camera capture
                 photo_data = request.form.get('photo')
                 if photo_data and photo_data.startswith('data:image/jpeg;base64,'):
-                    filename = f"{uuid.uuid4()}.jpg"
-                    photo_path = save_base64_photo(photo_data, filename)
-
-            if photo_path:
-                # Save to database and analyze
-                analysis_results = save_and_analyze_photo(user.id, filename, photo_path)
+                    result = save_and_analyze_photo(user.id, photo_data, is_base64=True)
+            
+            if 'result' in locals():
+                from botocore.config import Config as BotoConfig
                 
-                # Cleanup and return results
-                cleanup_old_photos()
-                return render_template('results.html', 
-                                    photo_data=url_for('static', filename=f'photos/{filename}'), 
-                                    analysis=analysis_results)
+                # Store config values in variables to avoid current_app access
+                aws_access_key = Config.AWS_ACCESS_KEY_ID
+                aws_secret_key = Config.AWS_SECRET_ACCESS_KEY
+                bucket_name = Config.AWS_BUCKET_NAME
+                
+                s3_client = boto3.client('s3',
+                    aws_access_key_id=aws_access_key,
+                    aws_secret_access_key=aws_secret_key,
+                    region_name='us-east-2',
+                    config=BotoConfig(
+                        signature_version='s3v4'
+                    )
+                )
+                
+                # Get the key from the full URL
+                key = result['photo_url'].replace(f'https://{bucket_name}.s3.us-east-2.amazonaws.com/', '')
+                
+                presigned_url = s3_client.generate_presigned_url('get_object',
+                    Params={
+                        'Bucket': bucket_name,
+                        'Key': key
+                    },
+                    ExpiresIn=3600
+                )
 
+                #Add presigned url to session
+                session['photo_url'] = presigned_url
+                
+                return render_template('results.html', 
+                                    photo_data=presigned_url,
+                                    analysis=result['analysis'])
+            else:
+                return redirect(url_for('main.camera'))
+                
         except Exception as e:
-            current_app.logger.error(f"Error in results route: {str(e)}")
+            import traceback
+            print(f"Error in results route: {str(e)}")
+            print(traceback.format_exc())  # This will print the full error traceback
             return redirect(url_for('main.camera'))
 
     return redirect(url_for('main.camera'))
@@ -117,6 +143,12 @@ def login():
     )
     session['state'] = state
     return redirect(authorization_url)
+
+@main.route('/logout')
+def logout():
+    """Route to log out the user"""
+    session.clear()
+    return redirect(url_for('main.landing'))
 
 @main.route('/oauth2callback')
 def oauth2callback():
@@ -181,7 +213,7 @@ def dashboard():
 
     return render_template('dashboard.html', 
                          user_info=session['user_info'],
-                         last_photo=session.get('last_photo'),
+                         photo_url=session.get('photo_url'),
                          products=amazon_products,
                          analysis=session.get('face_analysis'))
 
