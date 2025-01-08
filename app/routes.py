@@ -15,7 +15,7 @@ from . import db
 from .models import User, UserPhoto, FacialAnalysis
 
 #My utils
-from .utils import get_or_create_user, save_photo, save_base64_photo, save_and_analyze_photo, cleanup_old_photos, load_amazon_products
+from .utils import get_or_create_user, save_and_analyze_photo, load_amazon_products
 
 
 

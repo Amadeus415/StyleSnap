@@ -2,76 +2,149 @@
 
 {% block content %}
 <div class="max-w-4xl mx-auto p-4">
-    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <!-- Score Display -->
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-900">Your Style Score</h1>
-            <div class="text-6xl font-bold text-primary mt-4">{{ analysis.score }}</div>
-        </div>
+    <!--Display age_percentage and Visual Age-->
+    <div class="font-bold text-xl text-center mb-6 font-sans">
+        Your FaceX Rank is in <span class="text-purple-500 text-3xl">{{ analysis.age_percentage }}</span>, for your predicted age.
+    </div>
 
-        <!-- Analysis Details -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Scores -->
-            <div class="space-y-4">
-                <h2 class="text-xl font-semibold text-gray-800">Detailed Scores</h2>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Skin</div>
-                        <div class="text-lg font-semibold text-primary">{{ analysis.skin }}</div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Hair</div>
-                        <div class="text-lg font-semibold text-primary">{{ analysis.hair }}</div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Smile</div>
-                        <div class="text-lg font-semibold text-primary">{{ analysis.smile }}</div>
-                    </div>
-                    <div class="p-3 bg-gray-50 rounded-lg">
-                        <div class="text-sm text-gray-600">Jawline</div>
-                        <div class="text-lg font-semibold text-primary">{{ analysis.jawline }}</div>
-                    </div>
-                </div>
+    <!--Display IMG-->
+    <div class="flex justify-center">
+        <img src="{{ photo_data }}" alt="Your Image" class="w-full h-auto max-w-lg rounded-lg">
+    </div>
+
+    <!-- Recommendation-->
+    <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-800">Recommendation</h3>
+        <p class="text-gray-600">{{ analysis.recommendation }}</p>
+    </div>
+
+    <!-- Celebrity Lookalikes-->
+    <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-800">CelebrityLookalikes</h3>
+        <p class="text-gray-600">{{ analysis.lookalike }}</p>
+    </div>
+
+
+    <!--Display scrore and potential score with a bar chart-->
+    <div class="mt-8 space-y-6">
+        <!-- Current Score Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-gray-800">Current Score</h3>
+                <span class="text-2xl font-bold text-green-600">{{ analysis.score }}/100</span>
             </div>
-
-            <!-- Potential -->
-            <div class="space-y-4">
-                <h2 class="text-xl font-semibold text-gray-800">Your Potential</h2>
-                <div class="p-4 bg-gray-50 rounded-lg">
-                    <div class="text-sm text-gray-600">Potential Score</div>
-                    <div class="text-3xl font-bold text-primary">{{ analysis.potential_score }}</div>
-                    <div class="mt-2 text-sm text-gray-500">With suggested improvements</div>
-                </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.score }}%"></div>
             </div>
         </div>
-
-        <!-- Image Quality Tips -->
-        <div class="mt-4 p-6 bg-gray-50 rounded-lg">
-            <h3 class="font-semibold text-gray-800 mb-2">Photo Tips</h3>
-            <p class="text-gray-600">{{ analysis.image_quality }}</p>
+        <!-- Potential Score Section -->
+        <div class="bg-white p-6 rounded-lg shadow-md border-2 border-purple-500 transform hover:scale-105 transition-all duration-300">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-purple-800">Your Potential Score</h3>
+                <span class="text-3xl font-bold text-purple-600 animate-pulse">{{ analysis.potential_score }}/100</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="bg-purple-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.potential_score }}%;"></div>
+            </div>
+            <p class="mt-2 text-sm text-purple-600 font-medium text-center">This could be you with improvements!</p>
         </div>
     </div>
-    
 
-    <!-- Photo Display -->
-    {% if photo_data %}
-    <div class="photo-container mx-auto mb-8">
-        <img src="{{ photo_data }}" alt="Uploaded photo" class="w-full max-w-2xl mx-auto rounded-lg shadow-lg">
-    </div>
-    {% else %}
-    <div class="text-center py-8">
-        <p class="text-gray-600">No photo uploaded. <a href="{{ url_for('main.camera') }}" class="text-primary hover:text-primary-focus">Take a photo</a></p>
-    </div>
-    {% endif %}
+    <!-- Display individual scores -->
+    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Skin Score -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-gray-800">Skin Quality</h3>
+                <span class="text-2xl font-bold text-blue-600">{{ analysis.skin }}/100</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.skin }}%"></div>
+            </div>
+        </div>
 
-    <!-- Action Buttons -->
-    <div class="flex justify-center gap-4">
-        <a href="{{ url_for('main.camera') }}" class="btn btn-outline">Take Another Photo</a>
-        {% if not session.get('user_info') %}
-        <a href="{{ url_for('main.login') }}" class="btn btn-primary">Sign In to Save Results</a>
-        {% else %}
-        <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
-        {% endif %}
+        <!-- Jawline Score -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-gray-800">Jawline Definition</h3>
+                <span class="text-2xl font-bold text-blue-600">{{ analysis.jawline }}/100</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.jawline }}%"></div>
+            </div>
+        </div>
+
+        <!-- Hair Score -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-gray-800">Hair Quality</h3>
+                <span class="text-2xl font-bold text-blue-600">{{ analysis.hair }}/100</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.hair }}%"></div>
+            </div>
+        </div>
+
+        <!-- Smile Score -->
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-semibold text-gray-800">Smile Quality</h3>
+                <span class="text-2xl font-bold text-blue-600">{{ analysis.smile }}/100</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.smile }}%"></div>
+            </div>
+        </div>
     </div>
+
+    <!-- Display description -->
+    <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-800">Description</h3>
+        <p class="text-gray-600">{{ analysis.description }}</p>
+    </div>
+
+    <!-- Display image quality -->  
+    <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-800">Image Quality</h3>
+        <p class="text-gray-600">{{ analysis.image_quality }}</p>
+    </div>
+    <!-- Call to action -->
+    <div class="mt-8 bg-gradient-to-r from-pink-100 via-blue-100 to-purple-100 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 text-center">
+        <h3 class="text-2xl font-bold text-gray-800 mb-4">Transform Your Look: Score {{ analysis.potential_score }}/100</h3>
+        <div class="space-y-4">
+            <p class="text-lg text-gray-700">
+                <span class="font-semibold">Your potential score of {{ analysis.potential_score }} is achievable within months!</span> Our AI analysis shows you can dramatically improve your appearance with targeted changes:
+            </p>
+            <ul class="list-disc list-inside text-gray-700 space-y-2 mx-auto max-w-md">
+                <li>Month 1-2: Optimize skincare routine and grooming habits</li>
+                <li>Month 2-3: Implement personalized style upgrades</li>
+                <li>Month 3-4: Master photo angles and lighting techniques</li>
+                <li>Month 4+: Fine-tune your look with advanced recommendations</li>
+            </ul>
+            <div class="bg-white/50 p-4 rounded-lg mt-6">
+                <h4 class="font-bold text-gray-800 mb-2">Benefits of Reaching Your Potential:</h4>
+                <ul class="list-disc list-inside text-gray-700 space-y-2 mx-auto max-w-md">
+                    <li>Enhanced confidence in social situations</li>
+                    <li>Professional advantage in career opportunities</li>
+                    <li>Improved dating prospects and relationships</li>
+                    <li>Better first impressions in any setting</li>
+                </ul>
+            </div>
+            <p class="text-lg text-gray-700 mt-4">
+                Your transformation journey starts now. Get detailed, AI-powered recommendations to unlock your full potential and join the top percentile of attractiveness.
+            </p>
+        </div>
+    </div>
+
+    <!-- Sign in Button-->
+    <div class="flex justify-center mt-8">
+        <a class="group inline-block rounded-lg bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 p-[3px] text-black focus:outline-none focus:ring active:text-opacity-75 hover:scale-110 transition-transform duration-300 shadow-xl" href="{{url_for('main.login')}}" >
+            <span class="block rounded-lg px-8 md:px-28 py-4 text-lg font-bold bg-gradient-to-r from-pink-500 via-blue-400 to-purple-500 group-hover:bg-gradient-to-l text-white">
+                Continue with Google to See More 🚀
+            </span> 
+        </a>
+    </div>
+
+
 </div>
-{% endblock %} 
+{% endblock %}

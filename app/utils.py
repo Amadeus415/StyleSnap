@@ -55,15 +55,7 @@ def get_or_create_user():
         db.session.rollback()
         raise
 
-def save_photo(file, user_id):
-    """Upload file directly to S3"""
-    s3_key, s3_url = upload_file_to_s3(file, user_id, is_base64=False)
-    return s3_key, s3_url
 
-def save_base64_photo(photo_data, user_id):
-    """Upload base64 photo directly to S3"""
-    s3_key, s3_url = upload_file_to_s3(photo_data, user_id, is_base64=True)
-    return s3_key, s3_url
 
 def save_and_analyze_photo(user_id, file_data, is_base64=False):
     """Save photo to S3 and analyze it"""
@@ -132,27 +124,3 @@ def save_and_analyze_photo(user_id, file_data, is_base64=False):
         current_app.logger.error(f"Error in save_and_analyze_photo: {str(e)}")
         db.session.rollback()
         raise
-
-def cleanup_old_photos():
-    """Cleanup old photos from S3"""
-    try:
-        # Get current user's photos except the latest
-        if 'user_info' in session:
-            user = User.query.filter_by(email=session['user_info']['email']).first()
-            if user:
-                old_photos = UserPhoto.query.filter_by(
-                    user_id=user.id,
-                    is_active=True
-                ).order_by(UserPhoto.upload_date.desc()).offset(1).all()
-
-                for photo in old_photos:
-                    # Delete from S3
-                    delete_file_from_s3(photo.s3_key)
-                    # Mark as inactive in database
-                    photo.is_active = False
-                
-                db.session.commit()
-                
-    except Exception as e:
-        current_app.logger.error(f"Error in cleanup_old_photos: {str(e)}")
-        db.session.rollback()

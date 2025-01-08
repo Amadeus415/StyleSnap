@@ -24,6 +24,8 @@ class Output(typing.TypedDict):
     age_percentage: str
     description: Dict[str, List[str]]
     image_quality: Dict[str, typing.Union[str, List[str]]]
+    recommendation: Dict[str, List[str]]
+    lookalike: Dict[str, List[str]]
 
 model_name = "gemini-1.5-flash"
 #Choose a Gemini model.
@@ -63,8 +65,12 @@ def analyze_face(image_data):
     - smile (0-100): Smile quality score
     - visual_age: Estimated age in years
     - age_percentage: Percentile ranking (e.g. "Top 15%")
-    - description: Object with "standout" and "weaknesses" arrays
+    - description: Object with "standout", "weaknesses", "Life Benefits" arrays
     - image_quality: Object with quality assessment details
+
+    - recommendation: Write a call to action for the user, that is tailored to their insecurities, making them want to see how to improve to potential_score. Make this brutal and honest. Explain to them the percent of the poptulation that they could be in. Really sell it, and make it sound like it is in thier reach but play on their insecurities.
+
+    - lookalike: List of celebrity lookalikes that are similar to the user.
 
     Please ensure all numeric scores are provided as integers between 0 and 100."""
 
