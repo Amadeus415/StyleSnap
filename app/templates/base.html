@@ -10,6 +10,10 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+    
+    {% if request.endpoint == 'main.dashboard' %}
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    {% endif %}
 
 </head>
 <body>

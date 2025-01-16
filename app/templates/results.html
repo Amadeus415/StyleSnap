@@ -12,19 +12,6 @@
         <img src="{{ photo_data }}" alt="Your Image" class="w-full h-auto max-w-lg rounded-lg">
     </div>
 
-    <!-- Recommendation-->
-    <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800">Recommendation</h3>
-        <p class="text-gray-600">{{ analysis.recommendation }}</p>
-    </div>
-
-    <!-- Celebrity Lookalikes-->
-    <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800">CelebrityLookalikes</h3>
-        <p class="text-gray-600">{{ analysis.lookalike }}</p>
-    </div>
-
-
     <!--Display scrore and potential score with a bar chart-->
     <div class="mt-8 space-y-6">
         <!-- Current Score Section -->
@@ -108,6 +95,19 @@
         <h3 class="text-lg font-semibold text-gray-800">Image Quality</h3>
         <p class="text-gray-600">{{ analysis.image_quality }}</p>
     </div>
+
+    <!-- Recommendation-->
+    <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-800">Recommendation</h3>
+        <p class="text-gray-600">{{ analysis.recommendation }}</p>
+    </div>
+
+    <!-- Celebrity Lookalikes-->
+    <div class="mt-8">
+        <h3 class="text-lg font-semibold text-gray-800">CelebrityLookalikes</h3>
+        <p class="text-gray-600">{{ analysis.lookalike }}</p>
+    </div>
+
     <!-- Call to action -->
     <div class="mt-8 bg-gradient-to-r from-pink-100 via-blue-100 to-purple-100 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 text-center">
         <h3 class="text-2xl font-bold text-gray-800 mb-4">Transform Your Look: Score {{ analysis.potential_score }}/100</h3>

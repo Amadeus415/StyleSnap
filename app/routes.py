@@ -101,7 +101,7 @@ def results():
                         'Bucket': bucket_name,
                         'Key': key
                     },
-                    ExpiresIn=3600
+                    ExpiresIn=3600 # 1 hour
                 )
 
                 #Add presigned url to session

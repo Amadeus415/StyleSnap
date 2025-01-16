@@ -3,10 +3,10 @@
       {
         "title": "Forearm trainer",
         "description": "Build impressive forearm strength and definition with this professional-grade hand grip strengthener. The adjustable resistance helps you progressively build muscle, improving both your grip strength and the aesthetic appearance of your forearms. Perfect for athletes and fitness enthusiasts looking to enhance their functional strength and physical presence.",
+        "category": "confidence",
         "price": 16.99,
         "affiliate_link": "https://amzn.to/4gtRVhS",
         "image_url": "https://m.media-amazon.com/images/I/718tBdzFF6L._AC_SY355_.jpg",
-        "category": "Accessories",
         "benefits": {
           "masculinity": "+4"
         }
@@ -14,10 +14,10 @@
       {
         "title": "Adjustable Dumbbell Set",
         "description": "This versatile dumbbell set allows you to customize your workout routine to target different muscle groups. The adjustable weights enable you to progress from light to heavy, helping you build strength and endurance. Whether you're a beginner or an experienced athlete, these dumbbells are a versatile addition to your home gym.",
+        "category": "confidence",
         "price": 129.00,
         "affiliate_link": "https://amzn.to/3Zn7LUs",
         "image_url": "https://m.media-amazon.com/images/I/81KsMKX06aL._AC_SY450_.jpg",
-        "category": "Accessories",
         "benefits": {
           "masculinity": "+6"
         }
@@ -25,23 +25,22 @@
       {
         "title": "Cuban Chain",
         "description": "Elevate your masculine appeal with this premium Cuban Chain. The bold, geometric design draws attention to your jawline and neck area, creating a more commanding presence. Perfect for both casual and formal occasions, this chain adds a touch of luxury that makes you stand out.",
+        "category": "confidence",
         "price": 32.68,
         "affiliate_link": "https://amzn.to/3B4p0Sx",
         "image_url": "https://m.media-amazon.com/images/I/61cVggrR-oL._AC_SY625_.jpg",
-        "category": "Accessories",
         "benefits": {
           "masculinity": "+3",
           "style": "+2"
         }
       },
- 
       {
         "title": "14K Gold Rope Chain Style Cross Pendant",
         "description": "This 14K gold rope chain style cross pendant adds a touch of elegance and sophistication to your outfit. The cross design is a symbol of faith and strength, making it a popular choice for men who want to express their beliefs and values. The pendant is crafted with attention to detail, ensuring a high-quality finish that will last for years.",
+        "category": "confidence",
         "price": 110.0,
         "affiliate_link": "https://amzn.to/4fb64PY",
         "image_url": "https://m.media-amazon.com/images/I/61NRjY4FpjL._AC_SX395_.jpg",
-        "category": "Accessories",
         "benefits": {
           "style": "+3",
           "masculinity": "+2"
@@ -50,10 +49,10 @@
       {
         "title": "Teeth Whitening Kit",
         "description": "This teeth whitening kit is a simple and effective way to improve your smile. The kit includes a whitening pen and a brush, making it easy to use at home. The pen is designed to remove stains and brighten your teeth, while the brush helps to remove plaque and keep your teeth clean.",
+        "category": "smile",
         "price": 48.0,
         "affiliate_link": "https://amzn.to/41swjhB",
         "image_url": "https://m.media-amazon.com/images/I/61Vnr7qc+BL._AC_SX466_.jpg",
-        "category": "Smile",
         "benefits": {
           "smile": "+5"
         }
@@ -61,10 +60,10 @@
       {
         "title": "Jawline Gum",
         "description": "This jawline gum is a simple and effective way to improve your jawline. The gum is designed to remove stains and brighten your teeth, while the brush helps to remove plaque and keep your teeth clean.",
+        "category": "jawline",
         "price": 18.99,
         "affiliate_link": "https://amzn.to/4gtaMJJ",
         "image_url": "https://m.media-amazon.com/images/I/71Gso78+2RL._SX569_.jpg",
-        "category": "Jawline",
         "benefits": {
           "jawline": "+5",
           "masculinity": "+2",
@@ -74,10 +73,10 @@
       {
         "title": "Lightweight Moisturizer",
         "description": "Transform your skin's appearance with this advanced moisturizer. It deeply hydrates while remaining lightweight, giving your skin a healthy, youthful glow. Regular use helps reduce fine lines and creates a smoother, more refined complexion that looks great in any light.",
+        "category": "skin",
         "price": 43.22,
         "affiliate_link": "https://amzn.to/3BgMP9w",
         "image_url": "https://m.media-amazon.com/images/I/616ulh+TjEL._SX522_.jpg",
-        "category": "skincare",
         "benefits": {
           "skin quality": "+3",
           "jawline": "+1"
@@ -86,10 +85,10 @@
       {
         "title": "Daily Skin Care Set",
         "description": "A complete transformation for your skin. This comprehensive set tackles multiple concerns at once, from acne to dullness. The carefully curated products work together to enhance your natural features, reduce blemishes, and create a clearer, more attractive complexion.",
+        "category": "skin",
         "price": 36.99,
         "affiliate_link": "https://amzn.to/4ipyBUO",
         "image_url": "https://m.media-amazon.com/images/I/8195K8F2ORL._SX679_.jpg",
-        "category": "skincare",
         "benefits": {
           "skin quality": "+4",
           "smile": "+1"
@@ -98,10 +97,10 @@
       {
         "title": "Casual Henley Shirt",
         "description": "This well-fitted Henley accentuates your physique in all the right ways. The subtle v-neck elongates your neck and draws attention to your jawline, while the fitted sleeves highlight your arms. Perfect for creating a strong, masculine silhouette that attracts attention.",
+        "category": "confidence",
         "price": 29.99,
         "affiliate_link": "https://amzn.to/3D3tSrC",
         "image_url": "https://m.media-amazon.com/images/I/71bB9oMgpDL._AC_SX569_.jpg",
-        "category": "clothes",
         "benefits": {
           "masculinity": "+3",
           "style": "+2"
@@ -110,10 +109,10 @@
       {
         "title": "Oversized T-Shirt",
         "description": "Master the art of effortless style with this perfectly cut oversized tee. The relaxed fit creates an illusion of broader shoulders while maintaining a clean silhouette. The premium fabric drapes beautifully, making you look effortlessly cool and fashion-forward.",
+        "category": "confidence",
         "price": 38.99,
         "affiliate_link": "https://amzn.to/4gnXJcH",
         "image_url": "https://m.media-amazon.com/images/I/71pcS7eof8L._AC_SX569_.jpg",
-        "category": "clothes",
         "benefits": {
           "style": "+3",
           "masculinity": "+2"
@@ -122,10 +121,10 @@
       {
         "title": "Corduroy Pants",
         "description": "These expertly tailored corduroy pants enhance your lower body proportions while adding a sophisticated texture to your outfit. The cut elongates your legs and creates a more balanced silhouette, making you appear taller and more confident.",
+        "category": "confidence",
         "price": 19.99,
         "affiliate_link": "https://amzn.to/4g1IAOc",
         "image_url": "https://m.media-amazon.com/images/I/61cSaYkoX9L._AC_SY741_.jpg",
-        "category": "clothes",
         "benefits": {
           "style": "+3",
           "masculinity": "+1"
@@ -134,10 +133,10 @@
       {
         "title": "Polo Ralph Lauren Down Jacket",
         "description": "This premium down jacket doesn't just keep you warm - it transforms your entire silhouette. The tailored cut broadens your shoulders while creating a sleek waistline, making you look more athletic and masculine. The iconic Ralph Lauren styling adds instant sophistication to any outfit.",
+        "category": "confidence",
         "price": 241.01,
         "affiliate_link": "https://amzn.to/4g1XmVa",
         "image_url": "https://m.media-amazon.com/images/I/610uvJY9tLL._AC_SY741_.jpg",
-        "category": "clothes",
         "benefits": {
           "style": "+4",
           "masculinity": "+3"
@@ -146,10 +145,10 @@
       {
         "title": "Trucker Hat",
         "description": "More than just a hat - this trucker cap frames your face perfectly while adding a rugged, masculine edge to your look. The structured design helps define your facial features and can make your jawline appear more pronounced. Perfect for both casual outings and hiding bad hair days with style.",
+        "category": "hair",
         "price": 29.99,
         "affiliate_link": "https://amzn.to/3ZlKyC0",
         "image_url": "https://m.media-amazon.com/images/I/81voWl5quTL._AC_SX679_.jpg",
-        "category": "accessories",
         "benefits": {
           "jawline": "+2",
           "hair": "+3"
