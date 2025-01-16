@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- User Profile -->
+    <div class="bg-white rounded-lg shadow-lg p-6 flex items-center space-x-4">
+        {% if user_info %}
+            <img src="{{ user_info.picture }}" alt="Profile picture" class="h-16 w-16 rounded-full object-cover">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Welcome, {{ user_info.name }}!</h2>
+                <p class="text-gray-600">{{ user_info.email }}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Latest Photo with Score -->
+    <div class="bg-white rounded-lg shadow-lg p-6 my-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Latest Style Analysis</h2>
+        {% if photo_url and analysis %}
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="text-center p-4 bg-gray-50 rounded-lg">
+                    <div class="font-semibold text-gray-900">Age Analysis</div>
+                    <div class="text-lg text-primary">Visual age: {{ analysis.visual_age }} years</div>
+                    <div class="text-lg text-primary">{{ analysis.age_percentage }} of population</div>
+                </div>
+
+                <!-- Photo Display -->
+                <div class="rounded-lg overflow-hidden shadow-lg">
+                    <img src="{{ photo_url }}" alt="Your latest photo" class="w-full h-auto object-cover">
+                </div>
+                <!-- Score and Stats -->
+                <div class="flex flex-col justify-center space-y-8">
+                    <!-- Potential Score -->
+                    <div class="text-center p-6 bg-purple-100 rounded-xl shadow-lg border-2 border-purple-300 animate-pulse">
+                        <h3 class="text-lg font-semibold text-purple-900">Potential Score</h3>
+                        <div class="text-5xl font-bold text-purple-600 glow">{{ analysis.potential_score }}</div>
+                        <style>
+                            .glow {
+                                text-shadow: 0 0 10px rgba(147, 51, 234, 0.5),
+                                           0 0 20px rgba(147, 51, 234, 0.3),
+                                           0 0 30px rgba(147, 51, 234, 0.2);
+                            }
+                        </style>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <!--Score-->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Score</div>
+                            <div class="text-xl text-primary">{{ analysis.score }}</div>
+                        </div>
+
+                        <!-- Confidence -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Confidence</div>
+                            <div class="text-xl text-primary">{{ analysis.confidence }}</div>
+                        </div>
+
+                        <!-- Skin -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Skin</div>
+                            <div class="text-xl text-primary">{{ analysis.skin }}</div>
+                        </div>
+                        
+                        <!-- Jawline -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Jawline</div>
+                            <div class="text-xl text-primary">{{ analysis.jawline }}</div>
+                        </div>
+                        
+                        <!-- Hair -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Hair</div>
+                            <div class="text-xl text-primary">{{ analysis.hair }}</div>
+                        </div>
+                        
+                        <!-- Smile -->
+                        <div class="text-center p-4 bg-gray-50 rounded-lg">
+                            <div class="font-semibold text-gray-900">Smile</div>
+                            <div class="text-xl text-primary">{{ analysis.smile }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="text-center py-12">
+                <p class="text-gray-600 mb-4">No photos analyzed yet.</p>
+                <a href="{{ url_for('main.camera') }}" 
+                   class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-focus">
+                    Take Your First Photo
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Score Sections -->
+    {% for category in ['confidence', 'skin', 'jawline', 'hair', 'smile'] %}
+    <div class="mt-12">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-gray-900">{{ category|title }} Score: {{ analysis[category] }}/100</h2>
+                <button onclick="toggleSection('{{ category }}')" class="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2">
+                    <span id="{{ category }}ButtonText">Show Tips</span>
+                    <svg class="w-4 h-4 transition-transform" id="{{ category }}Arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full bg-gray-200 rounded-full h-4 mb-6">
+                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" 
+                     style="width: {{ analysis[category] }}%"></div>
+            </div>
+
+            <!-- Collapsible Tips Section -->
+            <div id="{{ category }}Content" class="hidden transition-all duration-300">
+                <div class="space-y-4 text-gray-700">
+                    <h3 class="font-semibold text-lg">Ways to Improve {{ category|title }}:</h3>
+                    <ul class="list-disc list-inside space-y-2">
+                        {% if category == 'confidence' %}
+                            <li>Practice positive self-talk and affirmations</li>
+                            <li>Work on maintaining good posture</li>
+                            <li>Set and achieve small goals regularly</li>
+                            <li>Engage in regular exercise</li>
+                            <li>Learn new skills to boost self-esteem</li>
+                        {% elif category == 'skin' %}
+                            <li>Maintain a consistent skincare routine</li>
+                            <li>Stay hydrated and eat a balanced diet</li>
+                            <li>Use sunscreen daily</li>
+                            <li>Get adequate sleep</li>
+                            <li>Regular exfoliation and moisturizing</li>
+                        {% elif category == 'jawline' %}
+                            <li>Practice facial exercises</li>
+                            <li>Maintain good posture</li>
+                            <li>Stay hydrated</li>
+                            <li>Reduce sodium intake</li>
+                            <li>Consider facial massage techniques</li>
+                        {% elif category == 'hair' %}
+                            <li>Use sulfate-free shampoo and conditioner</li>
+                            <li>Incorporate weekly deep conditioning treatments</li>
+                            <li>Minimize heat styling and use heat protectant products</li>
+                            <li>Take biotin and other hair-supporting supplements</li>
+                            <li>Regular trims every 6-8 weeks</li>
+                        {% elif category == 'smile' %}
+                            <li>Practice good oral hygiene</li>
+                            <li>Regular dental check-ups</li>
+                            <li>Consider teeth whitening options</li>
+                            <li>Stay hydrated for healthy lips</li>
+                            <li>Practice natural smiling exercises</li>
+                        {% endif %}
+                    </ul>
+
+                    <!-- Recommended Products Section -->
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold text-gray-900 mb-4">Recommended Products</h3>
+                        <div class="relative">
+                            <div class="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide" id="{{ category }}Products">
+                                {% for product in products if product.category == category %}
+                                <div class="flex-none w-64">
+                                    <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
+                                        <img src="{{ product.image_url }}" alt="{{ product.title }}" class="w-full h-48 object-cover rounded-lg mb-3">
+                                        <h4 class="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{{ product.title }}</h4>
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-[#0f294e] text-lg font-bold">${{ product.price }}</span>
+                                            
+                                        </div>
+                                        <a href="{{ product.affiliate_link }}" target="_blank" 
+                                           class="block w-full text-center px-4 py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-black font-medium rounded-lg shadow-sm transition-colors">
+                                            Buy Now
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <!-- Scroll Buttons -->
+                            <button class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white" 
+                                    onclick="scrollProducts('{{ category }}', 'left')">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                                </svg>
+                            </button>
+                            <button class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white" 
+                                    onclick="scrollProducts('{{ category }}', 'right')">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
