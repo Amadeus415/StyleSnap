@@ -1,5 +1,7 @@
 # FaceX
 
+**Note:** This app is currently in development as a PWA for mobile, web version is being added soon!
+
 **Input:** Selfie Photo
 
 **Output:** 
