@@ -2,77 +2,81 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- PWA optimized viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    
+    <!-- PWA meta tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#FFFFFF">
+    
+    <!-- PWA icons and manifest -->
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ url_for('static', filename='icons/icon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{{ url_for('static', filename='icons/icon-512x512.png') }}">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
     <title>{% block title %}FaceX{% endblock %}</title>
 
-
+    <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <!-- Scripts -->
+    {% if request.endpoint == 'main.camera' %}
     <script src="{{ url_for('static', filename='js/camera.js') }}"></script>
+    {% endif %}
     
     {% if request.endpoint == 'main.dashboard' %}
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
     {% endif %}
-
 </head>
-<body>
-    
-    <header class="fixed w-full top-0 z-50 bg-white shadow-sm">
-        <nav class="navbar bg-base-100">
-            <!-- Center logo -->
-            <div class="flex-1">
-                <a href="{{ url_for('main.landing') }}" class="btn btn-ghost text-2xl font-bold">FaceX</a>
-            </div>
-
-            <div class="flex-none">
-                {% if session.get('user_info') %}
-                <a href="{{ url_for('main.logout') }}" class="btn btn-ghost">Logout</a>
-                {% else %}
-                <a href="{{ url_for('main.login') }}" class="btn btn-ghost">Login</a>
-                {% endif %}
-            </div>
-        
-            <!-- Menu dropdown -->
-            <div class="flex-none">
-                <details class="dropdown dropdown-hover dropdown-end">
-                    <summary class="btn btn-square btn-ghost">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-5 w-5 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </summary>
-                    <ul class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                        <li><a href="{{ url_for('main.landing') }}">Home</a></li>
-                        <li><a href="{{ url_for('main.camera') }}">Upload a photo</a></li>
-                        <li><a href="{{ url_for('main.dashboard') }}">Dashboard</a></li>
-                    </ul>
-                </details>
-            </div>
-
-            <!-- pricing/billing dropdown -->
-            <div class="flex-none">
-                <details class="dropdown dropdown-hover dropdown-end">
-                    <summary class="btn btn-square btn-ghost">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block h-5 w-5 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
-                        </svg>
-                    </summary>
-                    <ul class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-                        <li><a href="{{ url_for('main.pricing') }}">Pricing</a></li>
-                        <li><a href="{{ url_for('main.landing') }}">Billing</a></li>
-                    </ul>
-                </details>
-            </div>
-        </nav>
-    </header>
-
-    <main class="mt-16 min-h-screen px-4 py-8">
+<body class="min-h-screen">
+    <!-- Main content -->
+    <main class="h-full">
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer class="bg-gray-100 py-4 text-center">
-        <p>&copy; 2024 FaceX. All rights reserved.</p>
-    </footer>
+    <!-- PWA install prompt -->
+    <div id="pwa-prompt" class="hidden fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg z-50">
+        <div class="flex justify-between items-center">
+            <p>Add to Home Screen</p>
+            <button id="pwa-close" class="text-gray-500">&times;</button>
+        </div>
+    </div>
+
+    <!-- PWA service worker registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/js/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+
+        // Handle PWA install prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('pwa-prompt').classList.remove('hidden');
+        });
+
+        // Close PWA prompt
+        document.getElementById('pwa-close')?.addEventListener('click', () => {
+            document.getElementById('pwa-prompt').classList.add('hidden');
+        });
+    </script>
 </body>
 </html>

@@ -34,3 +34,4 @@ class FacialAnalysis(db.Model):
     # Relationships
     user = db.relationship('User', backref='analyses')
     photo = db.relationship('UserPhoto', backref='analysis')
+

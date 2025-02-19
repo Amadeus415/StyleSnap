@@ -1,6 +1,6 @@
 import boto3
 from botocore.config import Config as BotoConfig
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
 from config import Config
 
 from google_auth_oauthlib.flow import Flow

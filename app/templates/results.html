@@ -108,40 +108,12 @@
         <p class="text-gray-600">{{ analysis.lookalike }}</p>
     </div>
 
-    <!-- Call to action -->
-    <div class="mt-8 bg-gradient-to-r from-pink-100 via-blue-100 to-purple-100 p-8 rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 text-center">
-        <h3 class="text-2xl font-bold text-gray-800 mb-4">Transform Your Look: Score {{ analysis.potential_score }}/100</h3>
-        <div class="space-y-4">
-            <p class="text-lg text-gray-700">
-                <span class="font-semibold">Your potential score of {{ analysis.potential_score }} is achievable within months!</span> Our AI analysis shows you can dramatically improve your appearance with targeted changes:
-            </p>
-            <ul class="list-disc list-inside text-gray-700 space-y-2 mx-auto max-w-md">
-                <li>Month 1-2: Optimize skincare routine and grooming habits</li>
-                <li>Month 2-3: Implement personalized style upgrades</li>
-                <li>Month 3-4: Master photo angles and lighting techniques</li>
-                <li>Month 4+: Fine-tune your look with advanced recommendations</li>
-            </ul>
-            <div class="bg-white/50 p-4 rounded-lg mt-6">
-                <h4 class="font-bold text-gray-800 mb-2">Benefits of Reaching Your Potential:</h4>
-                <ul class="list-disc list-inside text-gray-700 space-y-2 mx-auto max-w-md">
-                    <li>Enhanced confidence in social situations</li>
-                    <li>Professional advantage in career opportunities</li>
-                    <li>Improved dating prospects and relationships</li>
-                    <li>Better first impressions in any setting</li>
-                </ul>
-            </div>
-            <p class="text-lg text-gray-700 mt-4">
-                Your transformation journey starts now. Get detailed, AI-powered recommendations to unlock your full potential and join the top percentile of attractiveness.
-            </p>
-        </div>
-    </div>
 
     <!-- Sign in Button-->
     <div class="flex justify-center mt-8">
-        <a class="group inline-block rounded-lg bg-gradient-to-r from-pink-500 via-blue-500 to-purple-500 p-[3px] text-black focus:outline-none focus:ring active:text-opacity-75 hover:scale-110 transition-transform duration-300 shadow-xl" href="{{url_for('main.login')}}" >
-            <span class="block rounded-lg px-8 md:px-28 py-4 text-lg font-bold bg-gradient-to-r from-pink-500 via-blue-400 to-purple-500 group-hover:bg-gradient-to-l text-white">
-                Continue with Google to See More 🚀
-            </span> 
+        <a href="{{url_for('main.login')}}" class="inline-flex items-center px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md">
+            <img src="{{ url_for('static', filename='assets/google.svg') }}" alt="Google" class="w-5 h-5 mr-2">
+            Continue with Google
         </a>
     </div>
 
