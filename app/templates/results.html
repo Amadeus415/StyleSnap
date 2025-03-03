@@ -1,122 +1,173 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto p-4">
-    <!--Display age_percentage and Visual Age-->
-    <div class="font-bold text-xl text-center mb-6 font-sans">
-        Your FaceX Rank is in <span class="text-purple-500 text-3xl">{{ analysis.age_percentage }}</span>, for your predicted age.
+<!-- Full screen fixed container -->
+<div class="fixed inset-0 bg-white">
+
+    <!-- Title -->
+    <div class="absolute top-0 left-0 right-0 pt-16 z-10">
+        <h1 class="text-3xl font-bold text-center text-black">Your Rating</h1>
     </div>
 
-    <!--Display IMG-->
-    <div class="flex justify-center">
-        <img src="{{ photo_data }}" alt="Your Image" class="w-full h-auto max-w-lg rounded-lg">
-    </div>
-
-    <!--Display scrore and potential score with a bar chart-->
-    <div class="mt-8 space-y-6">
-        <!-- Current Score Section -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-lg font-semibold text-gray-800">Current Score</h3>
-                <span class="text-2xl font-bold text-green-600">{{ analysis.score }}/100</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.score }}%"></div>
-            </div>
-        </div>
-        <!-- Potential Score Section -->
-        <div class="bg-white p-6 rounded-lg shadow-md border-2 border-purple-500 transform hover:scale-105 transition-all duration-300">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-lg font-semibold text-purple-800">Your Potential Score</h3>
-                <span class="text-3xl font-bold text-purple-600 animate-pulse">{{ analysis.potential_score }}/100</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-purple-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.potential_score }}%;"></div>
-            </div>
-            <p class="mt-2 text-sm text-purple-600 font-medium text-center">This could be you with improvements!</p>
+    <!-- User Photo -->
+    <div class="absolute top-28 left-0 right-0 flex justify-center z-10">
+        <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
+            <img src="{{ photo_data }}" alt="Your Photo" class="w-full h-full object-cover">
         </div>
     </div>
 
-    <!-- Display individual scores -->
-    <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Skin Score -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-lg font-semibold text-gray-800">Skin Quality</h3>
-                <span class="text-2xl font-bold text-blue-600">{{ analysis.skin }}/100</span>
+    <!-- Swiper container -->
+    <div class="swiper absolute w-full h-[100dvh]">
+        <div class="swiper-wrapper">
+            <!-- Slide 1: Scores -->
+            <div class="swiper-slide flex flex-col items-center">
+                <div class="h-[30dvh]"></div> <!-- Adjusted spacer height -->
+
+                <!-- Congrats text -->
+                <div class="text-center mb-2">
+                    <h1 class="text-lg font-bold text-black">Congrats</h1>
+                    <div class="text-sm text-black-600">
+                        Your Score is <span class="text-orange-600"><u>Top 10%</u></span> for your age
+                    </div>
+                </div>
+                <!-- Content container -->
+                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
+
+                    <!-- Current Score -->
+                    <!-- Attractiveness Score Label -->
+                    <div class="text-center mb-4">
+                        <h2 class="text-xl font-bold text-gray-800">Your Attractiveness Score</h2>
+                    </div>
+                    <div class="flex justify-center items-center">
+                        <div class="relative flex items-center justify-center w-48 h-48 rounded-full bg-gray-100">
+                            <div class="absolute inset-2 rounded-full bg-white flex items-center justify-center">
+                                <span class="text-4xl font-bold text-green-600">{{analysis.score}}</span>
+                            </div>
+                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e6e6e6" stroke-width="8" />
+                                <circle cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="8" 
+                                    stroke-dasharray="283" stroke-dashoffset="calc(283 - (283 * {{analysis.score}}) / 100)" 
+                                    transform="rotate(-90 50 50)" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.skin }}%"></div>
+
+            <!-- Slide 2: Details -->
+            <div class="swiper-slide flex flex-col items-center">
+                <div class="h-[35dvh]"></div> <!-- Spacer for photo -->
+                
+                <!-- Content container -->
+                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
+                    <!-- Current and Potential Score -->
+                    <div class="flex justify-between items-center mx-6 mb-6">
+                        <div class="text-center">
+                            <h3 class="text-sm font-semibold text-gray-600">Current Score</h3>
+                            <span class="text-2xl font-bold text-blue-600">{{analysis.score}}</span>
+                        </div>
+                        <div class="h-12 border-r border-gray-300"></div>
+                        <div class="text-center">
+                            <h3 class="text-sm font-semibold text-gray-600">Potential Score</h3>
+                            <span class="text-2xl font-bold text-green-600">{{analysis.potential_score|default(analysis.score|int + 15)}}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4 mx-4">
+                        <!-- Skin Score -->
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Skin</h3>
+                            <span class="text-xl font-bold text-blue-600">{{ analysis.skin }}/100</span>
+                            <progress class="progress w-full mt-2" value="{{ analysis.skin }}" max="100"></progress>
+                        </div>
+
+                        <!-- Jawline Score -->
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Jawline</h3>
+                            <span class="text-xl font-bold text-blue-600">{{ analysis.jawline }}/100</span>
+                            <progress class="progress w-full mt-2" value="{{ analysis.jawline }}" max="100"></progress>
+                        </div>
+
+                        <!-- Hair Score -->
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Hair</h3>
+                            <span class="text-xl font-bold text-blue-600">{{ analysis.hair }}/100</span>
+                            <progress class="progress w-full mt-2" value="{{ analysis.hair }}" max="100"></progress>
+                        </div>
+
+                        <!-- Smile Score -->
+                        <div class="bg-white p-4 rounded-lg shadow-md">
+                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Smile</h3>
+                            <span class="text-xl font-bold text-blue-600">{{ analysis.smile }}/100</span>
+                            <progress class="progress w-full mt-2" value="{{ analysis.smile }}" max="100"></progress>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Slide 3: Celebrity Lookalikes -->
+            <div class="swiper-slide flex flex-col items-center">
+                <div class="h-[35dvh]"></div> <!-- Spacer for photo -->
+                
+                <!-- Content container -->
+                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
+                    <div class="mx-4">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4">Celebrity Lookalikes</h2>
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <p class="text-gray-700 text-lg leading-relaxed">
+                                None right now
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
-
-        <!-- Jawline Score -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-lg font-semibold text-gray-800">Jawline Definition</h3>
-                <span class="text-2xl font-bold text-blue-600">{{ analysis.jawline }}/100</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.jawline }}%"></div>
-            </div>
-        </div>
-
-        <!-- Hair Score -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-lg font-semibold text-gray-800">Hair Quality</h3>
-                <span class="text-2xl font-bold text-blue-600">{{ analysis.hair }}/100</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.hair }}%"></div>
-            </div>
-        </div>
-
-        <!-- Smile Score -->
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex justify-between items-center mb-2">
-                <h3 class="text-lg font-semibold text-gray-800">Smile Quality</h3>
-                <span class="text-2xl font-bold text-blue-600">{{ analysis.smile }}/100</span>
-            </div>
-            <div class="w-full bg-gray-200 rounded-full h-4">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: {{ analysis.smile }}%"></div>
-            </div>
-        </div>
+        
+        <!-- Pagination -->
+        <div class="swiper-pagination !absolute !bottom-32 !z-[20]"></div>
     </div>
 
-    <!-- Display description -->
-    <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800">Description</h3>
-        <p class="text-gray-600">{{ analysis.description }}</p>
-    </div>
-
-    <!-- Display image quality -->  
-    <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800">Image Quality</h3>
-        <p class="text-gray-600">{{ analysis.image_quality }}</p>
-    </div>
-
-    <!-- Recommendation-->
-    <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800">Recommendation</h3>
-        <p class="text-gray-600">{{ analysis.recommendation }}</p>
-    </div>
-
-    <!-- Celebrity Lookalikes-->
-    <div class="mt-8">
-        <h3 class="text-lg font-semibold text-gray-800">CelebrityLookalikes</h3>
-        <p class="text-gray-600">{{ analysis.lookalike }}</p>
-    </div>
-
-
-    <!-- Sign in Button-->
-    <div class="flex justify-center mt-8">
-        <a href="{{url_for('main.login')}}" class="inline-flex items-center px-6 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 shadow-md">
-            <img src="{{ url_for('static', filename='assets/google.svg') }}" alt="Google" class="w-5 h-5 mr-2">
+    <!-- Fixed bottom button -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white px-4 py-4 pb-[calc(env(safe-area-inset-bottom)+2rem)] z-[30]">
+        <a href="{{url_for('main.login')}}" 
+           class="flex items-center justify-center w-full py-4 bg-black text-white rounded-full font-medium text-lg">
+            <img src="{{ url_for('static', filename='assets/google.png') }}" alt="Google" class="w-5 h-5 mr-2">
             Continue with Google
         </a>
+
     </div>
-
-
 </div>
+
+<!-- Initialize Swiper -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const swiper = new Swiper('.swiper', {
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+            bulletClass: 'swiper-pagination-bullet !bg-black',
+            bulletActiveClass: 'swiper-pagination-bullet-active !bg-black'
+        },
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        }
+    });
+});
+</script>
+
+<style>
+.swiper-pagination-bullet {
+    background: black !important;
+    opacity: 0.2;
+    width: 10px !important;
+    height: 10px !important;
+    margin: 0 5px !important;
+}
+.swiper-pagination-bullet-active {
+    opacity: 1 !important;
+}
+</style>
 {% endblock %}

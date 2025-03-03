@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flex flex-col items-center justify-start mt-4 min-h-screen bg-white p-4">
+    <!-- Main text -->
+    <h1 class="text-4xl font-bold text-center">Unlock Your True</h1>
+    <h1 class="text-4xl font-bold text-center text-purple-500">Attractiveness</h1>
+    <h1 class="text-4xl font-bold text-center mb-4">With Expert Advice</h1>
+
+        <!-- Button (Take Photo ->) -->
+    <div class="flex flex-col items-center justify-start mt-4">
+        <button onclick="window.location.href='{{url_for('main.camera')}}'" class="btn h-14 w-[80dvw] text-xl active:scale-95 transition-transform duration-150 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 text-white" style="background: linear-gradient(135deg, #833AB4 0%, #FE3C72 30%, #FD1D1D 70%, #FF7854 100%);">Take Photo →</button>
+    </div>
+
+    <!-- test section-->
+     <div class="flex flex-col items-center justify-center mt-8 mb-6">
+        <img src="{{ url_for('static', filename='assets/value/before_after_looksmaxxing.webp') }}" alt="Before and After" class="w-full max-w-md">
+        <div class="flex items-center justify-center mt-4 mb-6">
+        <span class="text-3xl font-bold text-red-600">50</span>
+        <img src="{{ url_for('static', filename='assets/facts_icons/arrow.png') }}" alt="Arrow" class="w-10 h-10 mx-4 transform -rotate-90">
+        <span class="text-3xl font-bold text-green-600">95</span>
+    
+    </div>
+
+
+
+    <!-- Phone mockup-->
+    <div class="mockup-phone scale-50 -mt-32 -mb-32">
+        <div class="camera"></div>
+        <div class="display h-[600px]">
+          
+            <!-- image of a girl -->
+            <img src="{{ url_for('static', filename='assets/blonde.png') }}" alt="Girl" class="w-full h-full object-cover">
+        </div>
+    </div>
+
+    <!-- quick testimonal about method-->
+     <p class="text-center text-md mb-4">
+        Upload a selfie and get your attractiveness rank plus personalized look-maximizing tips. Our advice is powered by data from health experts like Huberman and proven style science.
+     </p>
+
+     <!-- facts-->
+        <!-- camera logo - 1211 scores taken today -->
+        <div class="flex flex-row items-center justify-center mb-4">
+            <img src="{{ url_for('static', filename='assets/facts_icons/camera.png') }}" alt="Camera" class="w-10 h-10">
+            <p class="text-center text-md ml-2"><b><u>1211</u></b> scores taken today</p>
+        </div>
+
+        <!-- chart logo - Avg. Score 64/100-->
+        <div class="flex flex-row items-center justify-center mb-4">
+            <img src="{{ url_for('static', filename='assets/facts_icons/line-chart.png') }}" alt="Chart" class="w-10 h-10">
+            <p class="text-center text-md ml-2">Average Score <b><u>64</u></b>/100</p>
+        </div>
+
+        <!-- message logo - User ratings from reviews.io -->
+        <div class="flex flex-row items-center justify-center mb-10">
+            <img src="{{ url_for('static', filename='assets/facts_icons/comment.png') }}" alt="Message" class="w-10 h-10">
+            <p class="text-center text-md ml-2"><b><u>4.8</u></b>/5 from reviews.io</p>
+        </div>
+
+
+        <!-- Main text -->
+        <h1 class="text-4xl font-bold text-center">Other People's</h1>
+        <h1 class="text-4xl font-bold text-center text-blue-600">Attractiveness</h1>
+        <h1 class="text-4xl font-bold text-center mb-4">Scores</h1>
+        <!-- Hand drawn arrow-->
+        <img src="{{ url_for('static', filename='assets/facts_icons/arrow.png') }}" alt="Arrow" class="w-10 h-10">
+        <!-- 4 cards 2x2 With Peoples Photos and Scores-->
+        <div class="grid grid-cols-2 gap-4 mx-4 mb-6">
+            <!-- Card 1 -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <img src="{{ url_for('static', filename='assets/celebrities/richards.png') }}" alt="Celebrity 1" class="w-full h-40 object-cover rounded-md mb-2">
+                <h3 class="text-sm font-semibold text-gray-800 mb-1">Josh Richards</h3>
+                <span class="text-xl font-bold text-blue-600">85/100</span>
+                <progress class="progress w-full mt-2" value="85" max="100"></progress>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <img src="{{ url_for('static', filename='assets/celebrities/carpenter.png') }}" alt="Celebrity 2" class="w-full h-40 object-cover rounded-md mb-2">
+                <h3 class="text-sm font-semibold text-gray-800 mb-1">Sabrina Carpenter</h3>
+                <span class="text-xl font-bold text-blue-600">92/100</span>
+                <progress class="progress w-full mt-2" value="92" max="100"></progress>
+            </div>
+            
+            <!-- Card 3 -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <img src="{{ url_for('static', filename='assets/celebrities/sweeney.jpg') }}" alt="Celebrity 3" class="w-full h-40 object-cover rounded-md mb-2">
+                <h3 class="text-sm font-semibold text-gray-800 mb-1">Sidney Sweeney</h3>
+                <span class="text-xl font-bold text-blue-600">78/100</span>
+                <progress class="progress w-full mt-2" value="78" max="100"></progress>
+            </div>
+            
+            <!-- Card 4 -->
+            <div class="bg-white p-4 rounded-lg shadow-md">
+                <img src="{{ url_for('static', filename='assets/celebrities/timothy_chalamet.jpg') }}" alt="Celebrity 4" class="w-full h-40 object-cover rounded-md mb-2">
+                <h3 class="text-sm font-semibold text-gray-800 mb-1">Timothy Chalamet</h3>
+                <span class="text-xl font-bold text-blue-600">88/100</span>
+                <progress class="progress w-full mt-2" value="88" max="100"></progress>
+            </div>
+        </div>
+
+        <!-- Before and after-->
+        <div class="flex flex-col items-center justify-center mb-4 mt-12">
+            <h1 class="text-3xl font-bold text-center">Transform Your</h1>
+            <h1 class="text-3xl font-bold text-center text-pink-600">Appearance</h1>
+            <h1 class="text-3xl font-bold text-center mb-6">in 12 months</h1>
+            <img src="{{ url_for('static', filename='assets/value/before_after_looksmaxxing.webp') }}" alt="Before and After" class="w-full max-w-md">
+            <div class="flex items-center justify-center mt-4 mb-6">
+                <span class="text-3xl font-bold text-red-600">50</span>
+                <img src="{{ url_for('static', filename='assets/facts_icons/arrow.png') }}" alt="Arrow" class="w-10 h-10 mx-4 transform -rotate-90">
+                <span class="text-3xl font-bold text-green-600">95</span>
+            </div>
+        </div>
+        
+        <!-- LookMax Benefits Section -->
+        <div class="mt-16 mb-10 w-full">
+            <h1 class="text-3xl font-bold text-center">Transform Your</h1>
+            <h1 class="text-3xl font-bold text-center text-green-600">Appearance</h1>
+            <h1 class="text-3xl font-bold text-center mb-6">And Life</h1>
+            
+            <p class="text-center text-md px-4 mb-6">
+                Our AI analyzes your unique features and provides personalized advice to enhance your natural attractiveness
+            </p>
+            
+            <!-- Benefits Cards -->
+            <div class="grid grid-cols-2 gap-4 mx-4 mb-6">
+                <!-- Hair Card -->
+                <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg shadow-md flex flex-col items-center">
+                    <img src="{{ url_for('static', filename='assets/value/hair.png') }}" alt="Hair" class="w-12 h-12 mb-2">
+                    <h3 class="text-lg font-semibold text-center">Hair</h3>
+                    <p class="text-sm text-center">Find your ideal style and care routine</p>
+                </div>
+                
+                <!-- Skin Card -->
+                <div class="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg shadow-md flex flex-col items-center">
+                    <img src="{{ url_for('static', filename='assets/value/skin.png') }}" alt="Skin" class="w-12 h-12 mb-2">
+                    <h3 class="text-lg font-semibold text-center">Skin</h3>
+                    <p class="text-sm text-center">Achieve clear, glowing complexion</p>
+                </div>
+                
+                <!-- Smile Card -->
+                <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-lg shadow-md flex flex-col items-center">
+                    <img src="{{ url_for('static', filename='assets/value/smile.png') }}" alt="Smile" class="w-12 h-12 mb-2">
+                    <h3 class="text-lg font-semibold text-center">Smile</h3>
+                    <p class="text-sm text-center">Enhance your most powerful expression</p>
+                </div>
+                
+                <!-- Jawline Card -->
+                <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg shadow-md flex flex-col items-center">
+                    <img src="{{ url_for('static', filename='assets/value/jaw-contouring.png') }}" alt="Jawline" class="w-12 h-12 mb-2">
+                    <h3 class="text-lg font-semibold text-center">Jawline</h3>
+                    <p class="text-sm text-center">Define your facial structure</p>
+                </div>
+            </div>
+            
+            <!-- Benefits Results -->
+            <div class="flex flex-col items-center justify-center px-4 py-4 bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg mx-4 shadow-md">
+                <h3 class="text-xl font-bold mb-3 text-center">Improve Your Life</h3>
+                
+                <div class="grid grid-cols-3 gap-3 w-full">
+                    <!-- Confidence -->
+                    <div class="flex flex-col items-center">
+                        <img src="{{ url_for('static', filename='assets/value/confidence.png') }}" alt="Confidence" class="w-10 h-10 mb-1">
+                        <p class="text-sm font-medium text-center">Confidence</p>
+                    </div>
+                    
+                    <!-- Dating -->
+                    <div class="flex flex-col items-center">
+                        <img src="{{ url_for('static', filename='assets/value/dating.png') }}" alt="Dating" class="w-10 h-10 mb-1">
+                        <p class="text-sm font-medium text-center">Dating</p>
+                    </div>
+                    
+                    <!-- Career -->
+                    <div class="flex flex-col items-center">
+                        <img src="{{ url_for('static', filename='assets/value/career.png') }}" alt="Career" class="w-10 h-10 mb-1">
+                        <p class="text-sm font-medium text-center">Career</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Cards explaining how it works-->
+        <div class="flex flex-row items-center justify-center mb-4 mt-12">
+            <div class="card w-[90dvw] bg-base-100 shadow-xl border-2 border-gray-300">
+                <div class="card-body flex items-center justify-center">
+                    <h2 class="card-title text-center text-2xl">How does it work?</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 1 - Sumbit a photo-->
+        <div class="card w-[90dvw] bg-orange-50 shadow-xl mb-4">
+            
+            <div class="card-body flex items-center justify-center">
+                <!-- logo of camera-->
+                <img src="{{ url_for('static', filename='assets/facts_icons/camera.png') }}" alt="Camera" class="w-10 h-10">
+                <h2 class="card-title">Submit a photo</h2>
+            </div>
+        </div>
+
+        <!-- Card 2 - Get your score-->
+        <div class="card w-[90dvw] bg-orange-100 shadow-xl mb-4">
+            <div class="card-body flex items-center justify-center">
+                <!-- logo of trophy-->
+                <img src="{{ url_for('static', filename='assets/facts_icons/trophy.png') }}" alt="Trophy" class="w-10 h-10">
+                <h2 class="card-title text-center">Get your score</h2>
+            </div>
+        </div>
+
+        <!-- Card 3 - Get tips and recommendations-->
+        <div class="card w-[90dvw] bg-orange-200 shadow-xl mb-4">
+            <div class="card-body flex items-center justify-center">
+                <!-- logo of top-three-->
+                <img src="{{ url_for('static', filename='assets/facts_icons/top-three.png') }}" alt="Top Three" class="w-10 h-10">
+                <h2 class="card-title text-center">Get tips and recommendations</h2>
+            </div>
+        </div>
+        
+        
+        <!-- Scroll-triggered footer -->
+    <!-- For a sticky footer with gradient background -->
+    <div id="scrollFooter" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-primary to-primary-focus text-white py-4 transform translate-y-full transition-transform duration-300 ease-in-out shadow-lg z-50">
+        <div class="container mx-auto flex justify-between items-center px-4">
+            <p class="text-lg font-bold">Ready to see your score?</p>
+            <button onclick="window.location.href='{{url_for('main.camera')}}'" class="btn btn-secondary h-12 px-6 text-lg active:scale-95 transition-transform duration-150">
+                Take Photo →
+            </button>
+        </div>
+    </div>
+
+    
+    
+
+</div>
+
+<!-- JavaScript for scroll footer -->
+<script src="{{ url_for('static', filename='js/scroll-footer.js') }}"></script>
+
+{% endblock %}

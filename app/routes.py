@@ -218,7 +218,20 @@ def dashboard():
                          analysis=session.get('face_analysis'))
 
 
+@main.route('/home')
+@login_required
+def home():
+    """Route for home page"""
+    return render_template('home.html',
+                           user_info=session['user_info'],
+                           photo_url=session.get('photo_url'),
+                           analysis=session.get('face_analysis'))
 @main.route('/pricing')
 def pricing():
     """Route for pricing page"""
     return render_template('settings/pricing.html')
+
+@main.route('/first')
+def first():
+    """Route for first page"""
+    return render_template('first.html')

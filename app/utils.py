@@ -60,7 +60,24 @@ def get_or_create_user():
 def save_and_analyze_photo(user_id, file_data, is_base64=False):
     """Save photo to S3 and analyze it"""
     try:
-        # Upload directly to S3
+        # Make a copy of the image data for analysis before S3 upload
+        if is_base64:
+            # If it's base64 data, decode it
+            if isinstance(file_data, str):
+                if 'data:image' in file_data and 'base64,' in file_data:
+                    file_data = file_data.split('base64,')[1]
+                file_data = file_data.strip().replace('\n', '').replace('\r', '')
+                image_data_for_analysis = base64.b64decode(file_data)
+            else:
+                raise ValueError("Base64 data must be a string")
+        else:
+            # If it's a file object, read it and store a copy
+            current_app.logger.debug(f"Reading file data for analysis, type: {type(file_data)}")
+            image_data_for_analysis = file_data.read()
+            current_app.logger.debug(f"Image data read, size: {len(image_data_for_analysis)} bytes")
+            file_data.seek(0)  # Reset file pointer for S3 upload
+        
+        # Upload to S3
         current_app.logger.debug("Starting S3 upload...")
         s3_key, s3_url = upload_file_to_s3(file_data, user_id, is_base64)
         current_app.logger.debug(f"S3 upload complete. URL: {s3_url}")
@@ -75,25 +92,10 @@ def save_and_analyze_photo(user_id, file_data, is_base64=False):
         db.session.add(photo)
         db.session.flush()
         current_app.logger.debug(f"Photo record created with ID: {photo.id}")
-
-        # Get the binary data for analysis
-        if is_base64:
-            # If it's base64 data, decode it
-            if isinstance(file_data, str):
-                if 'data:image' in file_data and 'base64,' in file_data:
-                    file_data = file_data.split('base64,')[1]
-                file_data = file_data.strip().replace('\n', '').replace('\r', '')
-                image_data = base64.b64decode(file_data)
-            else:
-                raise ValueError("Base64 data must be a string")
-        else:
-            # If it's a file object, read it
-            image_data = file_data.read()
-            file_data.seek(0)  # Reset file pointer for S3 upload
         
-        # Analyze directly from memory
-        current_app.logger.debug("Starting face analysis...")
-        analysis_results = analyze_face(image_data)
+        # Analyze using the copy we made earlier
+        current_app.logger.debug(f"Starting face analysis with image data size: {len(image_data_for_analysis)} bytes")
+        analysis_results = analyze_face(image_data_for_analysis)
         current_app.logger.debug("Face analysis complete")
         
         # Save analysis results
