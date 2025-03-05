@@ -4,17 +4,8 @@
 <!-- Full screen fixed container -->
 <div class="fixed inset-0 bg-white">
 
-    <!-- Title -->
-    <div class="absolute top-0 left-0 right-0 pt-16 z-10">
-        <h1 class="text-3xl font-bold text-center text-black">Your Rating</h1>
-    </div>
 
-    <!-- User Photo -->
-    <div class="absolute top-28 left-0 right-0 flex justify-center z-10">
-        <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
-            <img src="{{ photo_data }}" alt="Your Photo" class="w-full h-full object-cover">
-        </div>
-    </div>
+
 
     <!-- Swiper container -->
     <div class="swiper absolute w-full h-[100dvh]">
@@ -22,14 +13,20 @@
             <!-- Slide 1: Scores -->
             <div class="swiper-slide flex flex-col items-center">
                 <div class="h-[30dvh]"></div> <!-- Adjusted spacer height -->
-
-                <!-- Congrats text -->
-                <div class="text-center mb-2">
-                    <h1 class="text-lg font-bold text-black">Congrats</h1>
-                    <div class="text-sm text-black-600">
-                        Your Score is <span class="text-orange-600"><u>Top 10%</u></span> for your age
+                    <!-- User Photo -->
+                    <div class="absolute top-[12dvh] left-0 right-0 flex justify-center z-10">
+                        <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                            <img src="{{ photo_data }}" alt="Your Photo" class="w-full h-full object-cover">
+                        </div>
                     </div>
-                </div>
+
+                    <!-- Congrats text - Made larger and more prominent -->
+                    <div class="text-center mb-3">
+                        <h1 class="text-2xl font-bold text-black">Congrats</h1>
+                        <div class="text-lg text-black-600">
+                            Your Score is <span class="text-orange-600 font-bold"><u>Top 10%</u></span> for your age
+                        </div>
+                    </div>
                 <!-- Content container -->
                 <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
 
@@ -41,7 +38,7 @@
                     <div class="flex justify-center items-center">
                         <div class="relative flex items-center justify-center w-48 h-48 rounded-full bg-gray-100">
                             <div class="absolute inset-2 rounded-full bg-white flex items-center justify-center">
-                                <span class="text-4xl font-bold text-green-600">{{analysis.score}}</span>
+                                <span class="text-4xl font-bold text-green-600 blur-lg">{{analysis.score}}</span>
                             </div>
                             <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
                                 <circle cx="50" cy="50" r="45" fill="none" stroke="#e6e6e6" stroke-width="8" />
@@ -56,50 +53,73 @@
 
             <!-- Slide 2: Details -->
             <div class="swiper-slide flex flex-col items-center">
-                <div class="h-[35dvh]"></div> <!-- Spacer for photo -->
                 
                 <!-- Content container -->
-                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
-                    <!-- Current and Potential Score -->
+                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-6 pb-24 flex-1">
+
+                    <!-- add spacer from top of page -->
+                    <div class="h-[10dvh]"></div>
+
+                    <!-- Title at top -->
+                    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">Your Detailed Analysis</h2>
+                    
+                    <!-- Current and Potential Score - Larger text -->
                     <div class="flex justify-between items-center mx-6 mb-6">
                         <div class="text-center">
-                            <h3 class="text-sm font-semibold text-gray-600">Current Score</h3>
-                            <span class="text-2xl font-bold text-blue-600">{{analysis.score}}</span>
+                            <h3 class="text-base font-semibold text-gray-600">Current Score</h3>
+                            <span class="text-3xl font-bold text-blue-600 blur-sm">{{analysis.score}}</span>
                         </div>
-                        <div class="h-12 border-r border-gray-300"></div>
+                        <div class="h-14 border-r border-gray-300"></div>
                         <div class="text-center">
-                            <h3 class="text-sm font-semibold text-gray-600">Potential Score</h3>
-                            <span class="text-2xl font-bold text-green-600">{{analysis.potential_score|default(analysis.score|int + 15)}}</span>
+                            <h3 class="text-base font-semibold text-gray-600">Potential Score</h3>
+                            <span class="text-3xl font-bold text-green-600 blur-sm">{{analysis.potential_score|default(analysis.score|int + 15)}}</span>
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-4 mx-4">
+                    <!-- Redesigned score cards with different colors -->
+                    <div class="space-y-3 mx-4">
                         <!-- Skin Score -->
-                        <div class="bg-white p-4 rounded-lg shadow-md">
-                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Skin</h3>
-                            <span class="text-xl font-bold text-blue-600">{{ analysis.skin }}/100</span>
-                            <progress class="progress w-full mt-2" value="{{ analysis.skin }}" max="100"></progress>
+                        <div class="bg-white p-3 rounded-lg shadow-md">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-sm font-semibold text-gray-800">Skin</h3>
+                                <span class="text-lg font-bold text-purple-600 blur-sm">{{ analysis.skin }}/100</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
+                                <div class="bg-purple-600 h-3 rounded-full" style="width: {{ analysis.skin }}%"></div>
+                            </div>
                         </div>
 
                         <!-- Jawline Score -->
-                        <div class="bg-white p-4 rounded-lg shadow-md">
-                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Jawline</h3>
-                            <span class="text-xl font-bold text-blue-600">{{ analysis.jawline }}/100</span>
-                            <progress class="progress w-full mt-2" value="{{ analysis.jawline }}" max="100"></progress>
+                        <div class="bg-white p-3 rounded-lg shadow-md">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-sm font-semibold text-gray-800">Jawline</h3>
+                                <span class="text-lg font-bold text-blue-600 blur-sm">{{ analysis.jawline }}/100</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
+                                <div class="bg-blue-600 h-3 rounded-full" style="width: {{ analysis.jawline }}%"></div>
+                            </div>
                         </div>
 
                         <!-- Hair Score -->
-                        <div class="bg-white p-4 rounded-lg shadow-md">
-                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Hair</h3>
-                            <span class="text-xl font-bold text-blue-600">{{ analysis.hair }}/100</span>
-                            <progress class="progress w-full mt-2" value="{{ analysis.hair }}" max="100"></progress>
+                        <div class="bg-white p-3 rounded-lg shadow-md">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-sm font-semibold text-gray-800">Hair</h3>
+                                <span class="text-lg font-bold text-green-600 blur-sm">{{ analysis.hair }}/100</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
+                                <div class="bg-green-600 h-3 rounded-full" style="width: {{ analysis.hair }}%"></div>
+                            </div>
                         </div>
 
                         <!-- Smile Score -->
-                        <div class="bg-white p-4 rounded-lg shadow-md">
-                            <h3 class="text-sm font-semibold text-gray-800 mb-1">Smile</h3>
-                            <span class="text-xl font-bold text-blue-600">{{ analysis.smile }}/100</span>
-                            <progress class="progress w-full mt-2" value="{{ analysis.smile }}" max="100"></progress>
+                        <div class="bg-white p-3 rounded-lg shadow-md">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-sm font-semibold text-gray-800">Smile</h3>
+                                <span class="text-lg font-bold text-amber-600 blur-sm">{{ analysis.smile }}/100</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
+                                <div class="bg-amber-600 h-3 rounded-full" style="width: {{ analysis.smile }}%"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -114,28 +134,78 @@
                     <div class="mx-4">
                         <h2 class="text-xl font-bold text-gray-800 mb-4">Celebrity Lookalikes</h2>
                         <div class="bg-white p-6 rounded-lg shadow-md">
-                            <p class="text-gray-700 text-lg leading-relaxed">
-                                None right now
-                            </p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="text-center">
+                                    <p class="text-gray-700 font-medium mb-2 blur-sm">Timothee Chalamet</p>
+                                    <div class="aspect-square overflow-hidden">
+                                        <img src="{{ url_for('static', filename='assets/celebrities/timothy_chalamet.jpg') }}" alt="Celebrity Lookalike" class="w-full h-full object-cover rounded-lg shadow blur-md filter">
+                                    </div>
+                                </div>
+                                <div class="text-center">
+                                    <p class="text-gray-700 font-medium mb-2 blur-sm">Josh Richards</p>
+                                    <div class="aspect-square overflow-hidden">
+                                        <img src="{{ url_for('static', filename='assets/celebrities/richards.png') }}" alt="Celebrity Lookalike" class="w-full h-full object-cover rounded-lg shadow blur-md filter">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
         </div>
+
+        <!-- Slide 4 product recommendations-->
+        <div class="swiper-slide flex flex-col items-center">
+            <div class="h-[10dvh]"></div> <!-- Spacer for navbar -->
+            
+             <!-- 3 product cards with images and names -->
+            <!-- Content container -->
+            <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
+                <div class="mx-4">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Product Recommendations</h2>
+                    <div class="grid grid-cols-1 gap-4">
+                        <!-- Product 1 -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="aspect-square overflow-hidden mb-3">
+                                <div class="w-full h-full bg-gray-200 rounded-lg"></div>
+                            </div>
+                            <p class="text-gray-700 font-medium text-center">Product 1</p>
+                        </div>
+                        
+                        <!-- Product 2 -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="aspect-square overflow-hidden mb-3">
+                                <div class="w-full h-full bg-gray-200 rounded-lg"></div>
+                            </div>
+                            <p class="text-gray-700 font-medium text-center">Product 2</p>
+                        </div>
+                        
+                        <!-- Product 3 -->
+                        <div class="bg-white p-6 rounded-lg shadow-md">
+                            <div class="aspect-square overflow-hidden mb-3">
+                                <div class="w-full h-full bg-gray-200 rounded-lg"></div>
+                            </div>
+                            <p class="text-gray-700 font-medium text-center">Product 3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+        </div>
         
         <!-- Pagination -->
-        <div class="swiper-pagination !absolute !bottom-32 !z-[20]"></div>
+        <div class="swiper-pagination !absolute !bottom-[15dvh] !z-[20]"></div>
     </div>
 
-    <!-- Fixed bottom button -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white px-4 py-4 pb-[calc(env(safe-area-inset-bottom)+2rem)] z-[30]">
+    <!-- Fixed bottom button - Reduced padding and height -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] z-[30]">
         <a href="{{url_for('main.login')}}" 
-           class="flex items-center justify-center w-full py-4 bg-black text-white rounded-full font-medium text-lg">
+           class="flex items-center justify-center w-full py-3 bg-black text-white rounded-full font-medium text-lg">
             <img src="{{ url_for('static', filename='assets/google.png') }}" alt="Google" class="w-5 h-5 mr-2">
             Continue with Google
         </a>
-
     </div>
 </div>
 

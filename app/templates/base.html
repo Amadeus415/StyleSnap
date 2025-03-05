@@ -44,22 +44,20 @@
 </head>
 <body class="min-h-screen">
     <!-- Navbar -->
-    <div class="navbar bg-white fixed top-0 z-50 transition-all duration-300 border-b border-blue-100 shadow-sm">
+    <div class="navbar bg-black fixed top-0 z-50 transition-all duration-300 border-b border-gray-900 shadow-sm">
         <!-- Logo -->
         <div class="flex-1">
             <a href="{{ url_for('main.first') }}" class="btn btn-ghost pl-0">
                 <div class="flex items-center">
-                    <img src="{{ url_for('static', filename='icons/face-scan-square-svgrepo-com.svg') }}" alt="FaceX Logo" class="h-10 w-10">
-                    <span class="font-bold text-black text-3xl tracking-tight font-sans">FaceX</span>
+                    <img src="{{ url_for('static', filename='icons/face-scan-square-svgrepo-com.svg') }}" alt="FaceX Logo" class="h-10 w-10 invert">
+                    <span class="font-bold text-white text-3xl tracking-tight font-sans">FaceX</span>
                 </div>
             </a>
         </div>
         
-
-        
         <!-- Hamburger menu -->
         <div class="flex-none">
-            <button id="menuButton" class="btn btn-circle btn-ghost">
+            <button id="menuButton" class="btn btn-circle btn-ghost text-white">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 stroke-current">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
@@ -98,28 +96,39 @@
                             </div>
                             <div class="collapse-content bg-white"> 
                                 <ul class="menu menu-sm">
-                                    <li><a href="{{ url_for('main.camera') }}">Home</a></li>
-                                    <li><a href="{{ url_for('main.dashboard') }}">Progress Tracking</a></li>
-                                    <li><a href="{{ url_for('main.dashboard') }}#recommendations">advanced analysis</a></li>
+                                    <li><a href="{{ url_for('main.dashboard') }}">Progress Pics</a></li>
+                                    <li><a href="{{ url_for('main.dashboard') }}">Routine</a></li>
+                                    <li><a href="{{ url_for('main.dashboard') }}#recommendations">Product Recommendations</a></li>
+
                                 </ul>
                             </div>
                         </div>
                         
-                        <!-- Product Recommendations Section -->
-                        <div class="collapse collapse-arrow bg-gray-100 rounded-lg mb-4">
-                            <input type="checkbox" class="peer" /> 
-                            <div class="collapse-title font-medium">
-                                Product Recommendations
-                            </div>
-                            <div class="collapse-content bg-white"> 
-                                <ul class="menu menu-sm">
-                                    <li><a href="{{ url_for('main.dashboard') }}#products">Skincare</a></li>
-                                    <li><a href="{{ url_for('main.dashboard') }}#products">Hair</a></li>
-                                    <li><a href="{{ url_for('main.dashboard') }}#products">Style</a></li>
-                                </ul>
+                        <!-- voice link-->
+                        <div class="bg-gray-100 rounded-lg mb-4">
+                            <div class="p-4 font-medium">
+                                <a href="{{ url_for('main.first') }}" class="block w-full">AI Product Search <p class="text-xs text-gray-500">coming soon...</p></a>
+
                             </div>
                         </div>
-                        
+
+                        <!-- voice link-->
+                        <div class="bg-gray-100 rounded-lg mb-4">
+                            <div class="p-4 font-medium">
+                                <a href="{{ url_for('main.first') }}" class="block w-full"> AI Voice Analysis <p class="text-xs text-gray-500">coming soon...</p></a>
+
+                            </div>
+                        </div>
+
+                        <!-- about link-->
+                        <div class="bg-gray-100 rounded-lg mb-4">
+                            <div class="p-4 font-medium">
+                                <a href="{{ url_for('main.first') }}" class="block w-full">About</a>
+                            </div>
+                        </div>
+
+
+                                          
                         <!-- Testing Section -->
                         <div class="collapse collapse-arrow bg-gray-100 rounded-lg mb-4">
                             <input type="checkbox" class="peer" /> 
@@ -131,13 +140,6 @@
                                     <li><a href="{{ url_for('main.landing') }}">Old landing page</a></li>
                 
                                 </ul>
-                            </div>
-                        </div>
-
-                        <!-- about link-->
-                        <div class="bg-gray-100 rounded-lg mb-4">
-                            <div class="p-4 font-medium">
-                                <a href="{{ url_for('main.first') }}" class="block w-full">About</a>
                             </div>
                         </div>
                     </div>

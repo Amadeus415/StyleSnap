@@ -1,130 +1,106 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-   
-
-    <!-- Latest Photo with Score -->
-    <div class="bg-white rounded-lg shadow-lg p-6 my-8">
-        <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Latest Style Analysis</h2>
-        {% if photo_url and analysis %}
-            <div class="grid md:grid-cols-2 gap-8">
-
-                <!-- Photo Display -->
-                <div class="rounded-lg overflow-hidden shadow-lg">
-                    <img src="{{ photo_url }}" alt="Your latest photo" class="w-full h-auto object-cover">
-                </div>
-        {% else %}
-            <div class="text-center py-12">
-                <p class="text-gray-600 mb-4">No photos analyzed yet.</p>
-                <a href="{{ url_for('main.camera') }}" 
-                   class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-primary hover:bg-primary-focus">
-                    Take Your First Photo
-                </a>
-            </div>
-        {% endif %}
+<!-- Main container with dark grey background, fixed to screen height with no scrolling -->
+<div class="fixed inset-0 bg-slate-900 pt-16 flex flex-col">
+    <!-- Title at top, white text, centered -->
+    <h1 class="text-3xl font-bold text-white text-center my-2">Progress Pics</h1>
+    
+    <!-- Debug information (hidden in production) -->
+    <div class="text-xs text-white px-4 mb-2">
+        <p>User email: {{ user_info.email if user_info else 'Not logged in' }}</p>
+        <p>Photos found: {{ latest_photos|length }}</p>
     </div>
-
-    <!-- Score Sections -->
-    {% for category in ['confidence', 'skin', 'jawline', 'hair', 'smile'] %}
-    <div class="mt-12">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-gray-900">{{ category|title }} Score: {{ analysis[category] }}/100</h2>
-                <button onclick="toggleSection('{{ category }}')" class="text-blue-600 hover:text-blue-800 font-medium flex items-center gap-2">
-                    <span id="{{ category }}ButtonText">Show Tips</span>
-                    <svg class="w-4 h-4 transition-transform" id="{{ category }}Arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Progress Bar -->
-            <div class="w-full bg-gray-200 rounded-full h-4 mb-6">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" 
-                     style="width: {{ analysis[category] }}%"></div>
-            </div>
-
-            <!-- Collapsible Tips Section -->
-            <div id="{{ category }}Content" class="hidden transition-all duration-300">
-                <div class="space-y-4 text-gray-700">
-                    <h3 class="font-semibold text-lg">Ways to Improve {{ category|title }}:</h3>
-                    <ul class="list-disc list-inside space-y-2">
-                        {% if category == 'confidence' %}
-                            <li>Practice positive self-talk and affirmations</li>
-                            <li>Work on maintaining good posture</li>
-                            <li>Set and achieve small goals regularly</li>
-                            <li>Engage in regular exercise</li>
-                            <li>Learn new skills to boost self-esteem</li>
-                        {% elif category == 'skin' %}
-                            <li>Maintain a consistent skincare routine</li>
-                            <li>Stay hydrated and eat a balanced diet</li>
-                            <li>Use sunscreen daily</li>
-                            <li>Get adequate sleep</li>
-                            <li>Regular exfoliation and moisturizing</li>
-                        {% elif category == 'jawline' %}
-                            <li>Practice facial exercises</li>
-                            <li>Maintain good posture</li>
-                            <li>Stay hydrated</li>
-                            <li>Reduce sodium intake</li>
-                            <li>Consider facial massage techniques</li>
-                        {% elif category == 'hair' %}
-                            <li>Use sulfate-free shampoo and conditioner</li>
-                            <li>Incorporate weekly deep conditioning treatments</li>
-                            <li>Minimize heat styling and use heat protectant products</li>
-                            <li>Take biotin and other hair-supporting supplements</li>
-                            <li>Regular trims every 6-8 weeks</li>
-                        {% elif category == 'smile' %}
-                            <li>Practice good oral hygiene</li>
-                            <li>Regular dental check-ups</li>
-                            <li>Consider teeth whitening options</li>
-                            <li>Stay hydrated for healthy lips</li>
-                            <li>Practice natural smiling exercises</li>
-                        {% endif %}
-                    </ul>
-
-                    <!-- Recommended Products Section -->
-                    <div class="mt-8">
-                        <h3 class="text-xl font-bold text-gray-900 mb-4">Recommended Products</h3>
-                        <div class="relative">
-                            <div class="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide" id="{{ category }}Products">
-                                {% for product in products if product.category == category %}
-                                <div class="flex-none w-64">
-                                    <div class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow">
-                                        <img src="{{ product.image_url }}" alt="{{ product.title }}" class="w-full h-48 object-cover rounded-lg mb-3">
-                                        <h4 class="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{{ product.title }}</h4>
-                                        <div class="flex items-center mb-2">
-                                            <span class="text-[#0f294e] text-lg font-bold">${{ product.price }}</span>
-                                            
-                                        </div>
-                                        <a href="{{ product.affiliate_link }}" target="_blank" 
-                                           class="block w-full text-center px-4 py-2 bg-[#FFD814] hover:bg-[#F7CA00] text-black font-medium rounded-lg shadow-sm transition-colors">
-                                            Buy Now
-                                        </a>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                            <!-- Scroll Buttons -->
-                            <button class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white" 
-                                    onclick="scrollProducts('{{ category }}', 'left')">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                                </svg>
-                            </button>
-                            <button class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-lg hover:bg-white" 
-                                    onclick="scrollProducts('{{ category }}', 'right')">
-                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                                </svg>
-                            </button>
+    
+    <!-- Cards container with cards stacked from top with specific spacing -->
+    <div class="flex flex-col space-y-4 px-4 pt-4">
+        {% if latest_photos %}
+            {% for photo in latest_photos %}
+                <!-- Photo Card {{ loop.index }} -->
+                <div class="w-[100%] mx-auto h-20 bg-slate-800 border border-slate-600 rounded-lg flex items-center">
+                    <!-- Left 25%: User photo -->
+                    <div class="w-1/4 h-full flex p-1 items-center justify-center">
+                        <!-- Photo container with data attribute for JavaScript loading -->
+                        <div id="photoContainer{{ loop.index }}" 
+                             data-photo-id="{{ photo.id }}" 
+                             class="h-full w-full bg-slate-700 rounded-md flex items-center justify-center">
+                            <span class="loading-text text-white text-xs">Loading...</span>
                         </div>
                     </div>
+                    
+                    <!-- Middle 50%: Overall score and Potential score -->
+                    <div class="w-1/2 h-full flex flex-col justify-center px-4">
+                        <div class="text-white">
+                            {% if photo.id in photo_analyses %}
+                                <p class="text-sm">Overall Score: 
+                                    <span class="font-bold">{{ photo_analyses[photo.id].score|round|int }}/100</span>
+                                </p>
+                                <p class="text-sm mb-1">Potential: 
+                                    <span class="font-bold">{{ photo_analyses[photo.id].analysis_data.potential_score|default('90') }}/100</span>
+                                </p>
+                                <!-- Progress Bar showing over and potential score (green and purple)-->
+                                <div class="w-full h-2 bg-slate-700 mb-1 rounded-full overflow-hidden relative">
+                                    <div class="absolute left-0 h-full bg-emerald-500 rounded-full" style="width: {{ photo_analyses[photo.id].score }}%"></div>
+                                    <div class="absolute left-0 h-full bg-violet-500 rounded-full" style="width: {{ photo_analyses[photo.id].analysis_data.potential_score|default('90') }}%; clip-path: inset(0 0 0 {{ photo_analyses[photo.id].score }}%)"></div>
+                                </div>
+                                <!-- Date uploaded-->
+                                <p class="text-xs text-gray-400">{{ photo.upload_date.strftime('%b %d, %Y') }}</p>
+                            {% else %}
+                                <p class="text-sm">Overall Score: <span class="font-bold">--/100</span></p>
+                                <p class="text-sm">Potential Score: <span class="font-bold">--/100</span></p>
+                                <p class="text-xs text-gray-400">{{ photo.upload_date.strftime('%b %d, %Y') }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Right 25%: ">" button -->
+                    <div class="w-1/4 h-full flex items-center justify-center">
+                        <button class="text-white text-2xl font-bold">&gt;</button>
+                    </div>
                 </div>
+            {% endfor %}
+        {% else %}
+            <!-- No photos available message -->
+            <div class="w-[100%] mx-auto h-20 bg-gray-800 border border-white rounded-lg flex items-center justify-center">
+                <p class="text-white">No photos available. Take a photo to get started!</p>
             </div>
+        {% endif %}
+        
+        {% if latest_photos|length < 3 %}
+            {% for i in range(latest_photos|length, 3) %}
+                <!-- Empty placeholder card -->
+                <div class="w-[100%] mx-auto h-20 bg-gray-800 border border-white rounded-lg flex items-center">
+                    <div class="w-1/4 h-full p-2 flex items-center justify-center">
+                        <div class="h-full w-full bg-gray-600 rounded-md flex items-center justify-center">
+                            <span class="text-white text-xs">No Photo</span>
+                        </div>
+                    </div>
+                    <div class="w-1/2 h-full flex flex-col justify-center px-4">
+                        <div class="text-white">
+                            <p class="text-sm">Overall Score: <span class="font-bold">--/100</span></p>
+                            <p class="text-sm">Potential Score: <span class="font-bold">--/100</span></p>
+                        </div>
+                    </div>
+                    <div class="w-1/4 h-full flex items-center justify-center">
+                        <button class="text-white text-2xl font-bold">&gt;</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+       
+        
+        <!-- Circle icon with plus sign on right side -->
+        <div class="mt-8">
+            <a href="{{ url_for('main.camera') }}" class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg float-right mr-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+            </a> 
         </div>
+        
     </div>
-    {% endfor %}
 </div>
-{% endblock %}
 
+<!-- Include the dashboard JavaScript file -->
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

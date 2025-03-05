@@ -1,101 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StyleSnap - Home</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
-</head>
-<body class="bg-gray-50">
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="flex flex-col items-center justify-center p-4">
+    <h1 class="text-3xl font-bold text-center mb-6">Facial Analysis</h1>
     
     
-    <!-- Header -->
-    <div class="navbar bg-base-100">
-        <div class="flex-1">
-            <div class="w-40 rounded-full">
-                <img alt="User avatar" src="{{ url_for('static', filename='assets/logo/logo3.jpg') }}" class="w-full h-full object-cover" />
+    <!-- Interactive Image Comparison -->
+    <div class="w-full max-w-4xl mb-8">
+        <div class="image-comparison-container relative w-full h-auto rounded-lg overflow-hidden shadow-lg">
+            <!-- Before Image (Base Layer) -->
+            <img src="{{ url_for('static', filename='assets/imageFX/girl1_resize.jpg') }}" alt="Before" class="before-image w-full h-auto object-cover">
+            
+            <!-- After Image (Overlay Layer) -->
+            <img src="{{ url_for('static', filename='assets/imageFX/girl2_resize.jpg') }}" alt="After" class="after-image absolute top-0 left-0 w-full h-auto object-cover" style="clip-path: inset(0 50% 0 0);">
+            
+            <!-- Draggable Handle -->
+            <div class="comparison-handle absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize" style="left: 50%;">
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center">
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="transform -rotate-90 text-gray-500">←</span>
+                        <span class="transform rotate-90 text-gray-500">→</span>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="flex-none gap-2">
-            
+        
 
-            <div class="relative">
-                <!-- Three lines icon -->
-                <div id="menuButton" role="button" class="btn btn-ghost btn-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                </div>
-                <div id="fullscreenMenu" class="fixed inset-0 bg-base-100 z-50 hidden">
-                    <div class="flex justify-end p-4">
-                        <button id="closeMenu" class="btn btn-circle btn-ghost">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
+        
+        <!-- New Two-Column Text Layout -->
+        <div class="w-full mt-6 pt-4 border-t border-gray-200">
+            <div class="flex font-sans">
+                <div class="w-1/2 pr-4 flex flex-col items-center border-r border-gray-300">
+                    <div class="text-center">
+                        <span class="text-gray-500 text-sm uppercase">VISUALISATION /</span>
+                        <span class="font-bold text-gray-800 ml-1">Whole face</span>
                     </div>
-                    <ul class="h-full w-full p-8 space-y-4 flex flex-col items-center justify-center text-2xl">
-                        <li class="w-full max-w-md">
-                            <a class="block justify-between py-4 hover:bg-base-200 rounded-lg px-4">
-                                Profile
-                                <span class="badge badge-lg">New</span>
-                            </a>
-                        </li>
-                        <li class="w-full max-w-md"><a class="block py-4 hover:bg-base-200 rounded-lg px-4">Settings</a></li>
-                        <li class="w-full max-w-md"><a class="block py-4 hover:bg-base-200 rounded-lg px-4">Logout</a></li>
-                    </ul>
+                </div>
+                <div class="w-1/2 pl-4 flex flex-col items-center">
+                    <div class="text-center">
+                        <span class="text-gray-500 text-sm uppercase">TIMELINE /</span>
+                        <span class="font-bold text-gray-800 ml-1">4 Months</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+   
+</div>
 
-    <!-- Main section() -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Photo Display -->
-        <div class="rounded-lg overflow-hidden shadow-lg">
-            <img src="{{ photo_url }}" alt="Your latest photo" class="w-full h-auto object-cover">
-        </div>
-        <!-- User score for this image-->
-        <div class="flex justify-center items-center">
-            <div class="w-1/2 h-1/2 bg-red-500">
-                <p>User score for this image</p>
-                <p>Score: 0.85</p>
-            </div>
-        </div>
-       
+<!-- Include the image comparison script -->
+<script src="{{ url_for('static', filename='js/image-comparison.js') }}"></script>
 
-        <!--Button - advanced anlaysis-->
-        <!-- Fixed bottom button -->
-        <div class="fixed bottom-0 left-0 right-0 bg-white px-4 py-4 pb-8 z-[30]">
-            <button onclick="window.location.href='{{url_for('main.camera')}}'" 
-            class="block w-full text-center py-4 bg-black text-white rounded-full font-medium text-lg">
-                Advanced Analysis
-            </button>
-        </div>
-
-    </main>
-
-    <script>
-        // Toggle fullscreen menu
-        const menuButton = document.getElementById('menuButton');
-        const fullscreenMenu = document.getElementById('fullscreenMenu');
-        const closeMenu = document.getElementById('closeMenu');
-
-        menuButton.addEventListener('click', () => {
-            fullscreenMenu.classList.remove('hidden');
-        });
-
-        closeMenu.addEventListener('click', () => {
-            fullscreenMenu.classList.add('hidden');
-        });
-
-        // Close menu when clicking outside
-        window.addEventListener('click', (e) => {
-            if (!menuButton.contains(e.target) && !fullscreenMenu.contains(e.target)) {
-                fullscreenMenu.classList.add('hidden');
-            }
-        });
-    </script>
-</body>
-</html>
+{% endblock %}

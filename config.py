@@ -22,4 +22,7 @@ class Config:
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
     AWS_BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
     AWS_REGION = os.getenv('AWS_REGION', 'us-east-2')
+
+    STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+    STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
  

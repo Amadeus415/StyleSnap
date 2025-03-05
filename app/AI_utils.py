@@ -48,18 +48,61 @@ def analyze_face(image_data):
                         mime_type="image/jpeg"
                     ),
                     types.Part.from_text(
-                        text="Please analyze this face and provide scores for attractiveness, potential, confidence, skin, jawline, hair, and smile."
+                        text="""Please analyze this face and provide scores for the following attributes on a scale of 1-100: """
                     ),
                 ],
             ),
         ]
         
-        # Simplified request without schema for testing
+        # Define the response schema
         generate_content_config = types.GenerateContentConfig(
-            temperature=0.5,
-            top_p=0.99,
-            top_k=64,
-            max_output_tokens=8192,
+        temperature=0.5,
+        top_p=0.99,
+        top_k=64,
+        max_output_tokens=8192,
+        response_mime_type="application/json",
+        response_schema=genai.types.Schema(
+            type = genai.types.Type.OBJECT,
+            enum = [],
+            required = ["score", "potential_score", "confidence", "skin", "jawline", "hair", "smile"],
+            properties = {
+                "score": genai.types.Schema(
+                    type = genai.types.Type.NUMBER,
+                ),
+                "potential_score": genai.types.Schema(
+                    type = genai.types.Type.NUMBER,
+                ),
+                "confidence": genai.types.Schema(
+                    type = genai.types.Type.NUMBER,
+                ),
+                "skin": genai.types.Schema(
+                    type = genai.types.Type.NUMBER,
+                ),
+                "jawline": genai.types.Schema(
+                    type = genai.types.Type.NUMBER,
+                ),
+                "hair": genai.types.Schema(
+                    type = genai.types.Type.NUMBER,
+                ),
+                "smile": genai.types.Schema(
+                    type = genai.types.Type.NUMBER,
+                ),
+            },
+        ),
+        system_instruction=[
+            types.Part.from_text(
+                text=""" You are a professional image analysis model. Analyze the provided images and output a structured JSON response with the following specific scores and attributes:
+
+                Required fields:
+                - score (0-100): Overall attractiveness score
+                - potential_score (0-100): Potential score with improvements
+                - confidence (0-100): Confidence in the analysis
+                - skin (0-100): Skin quality score
+                - jawline (0-100): Jawline definition score
+                - hair (0-100): Hair quality and style score
+                - smile (0-100): Smile quality score """
+                        ),
+                    ],
         )
         
         print("Sending request to Gemini API...")

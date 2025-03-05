@@ -1,6 +1,6 @@
 import boto3
 from botocore.config import Config as BotoConfig
-from flask import Blueprint, render_template, request, redirect, url_for, session, current_app
+from flask import Blueprint, render_template, request, redirect, url_for, session, current_app, jsonify, flash, send_file
 from config import Config
 
 from google_auth_oauthlib.flow import Flow
@@ -46,10 +46,15 @@ client_secrets = {
     }
 }
 
+# Add this line to override the redirect URI with your ngrok URL
+# Make sure this EXACTLY matches what's in your Google Cloud Console
+NGROK_URL = "https://76fa-172-56-42-152.ngrok-free.app"  # Replace with your actual ngrok URL
+REDIRECT_URI = f"{NGROK_URL}/oauth2callback"
+
 @main.route('/')
-def landing():
+def first():
     """Route for landing page"""
-    return render_template('landing.html')
+    return render_template('first.html')
 
 @main.route('/camera')
 def camera():
@@ -130,17 +135,26 @@ def login():
     # Store the current page URL to redirect back after login
     session['next'] = request.args.get('next', url_for('main.dashboard'))
     
+    # Debug information
+    current_app.logger.info(f"Starting OAuth flow")
+    current_app.logger.info(f"Using redirect URI: {REDIRECT_URI}")
+    
     flow = Flow.from_client_config(
         client_secrets,
         scopes=['https://www.googleapis.com/auth/userinfo.email',
                 'https://www.googleapis.com/auth/userinfo.profile',
                 'openid']
     )
-    flow.redirect_uri = Config.GOOGLE_REDIRECT_URI
+    # Override the redirect URI with the ngrok URL
+    flow.redirect_uri = REDIRECT_URI
+    current_app.logger.info(f"Flow redirect_uri: {flow.redirect_uri}")
+    
     authorization_url, state = flow.authorization_url(
         access_type='offline',
         include_granted_scopes='true'
     )
+    current_app.logger.info(f"Authorization URL: {authorization_url}")
+    
     session['state'] = state
     return redirect(authorization_url)
 
@@ -148,12 +162,15 @@ def login():
 def logout():
     """Route to log out the user"""
     session.clear()
-    return redirect(url_for('main.landing'))
+    return redirect(url_for('main.first'))
 
 @main.route('/oauth2callback')
 def oauth2callback():
     """Callback route for Google OAuth"""
     try:
+        current_app.logger.info(f"OAuth callback received")
+        current_app.logger.info(f"Request URL: {request.url}")
+        
         flow = Flow.from_client_config(
             client_secrets,
             scopes=['https://www.googleapis.com/auth/userinfo.email',
@@ -161,11 +178,17 @@ def oauth2callback():
                    'openid'],
             state=session['state']
         )
-        flow.redirect_uri = Config.GOOGLE_REDIRECT_URI
+        # Use the same redirect URI as in the login route
+        flow.redirect_uri = REDIRECT_URI
+        current_app.logger.info(f"Flow redirect_uri: {flow.redirect_uri}")
         
-        # Get full URL including query parameters
-        authorization_response = request.url.replace('http://', 'https://')
-
+        # Extract the query parameters from the request URL
+        query_string = request.query_string.decode('utf-8')
+        
+        # Construct the authorization response using the ngrok URL
+        authorization_response = f"{REDIRECT_URI}?{query_string}"
+        current_app.logger.info(f"Constructed authorization response: {authorization_response}")
+        
         flow.fetch_token(authorization_response=authorization_response)
         
         credentials = flow.credentials
@@ -201,19 +224,54 @@ def oauth2callback():
         
     except Exception as e:
         current_app.logger.error(f"OAuth error: {str(e)}")
-        return redirect(url_for('main.landing'))
+        return redirect(url_for('main.first'))
 
 @main.route('/dashboard')
 @login_required
 def dashboard():
-    """Route for main page after authentication"""
-
+    """
+    Route for main page after authentication
+    Displays the user's latest photos and their analyses
+    """
+    # Get user from database
+    user = User.query.filter_by(email=session['user_info']['email']).first()
+    
+    # Initialize variables for photos and analyses
+    latest_photos = []
+    photo_analyses = {}
+    
+    if user:
+        # Query for the three latest photos
+        latest_photos = UserPhoto.query.filter_by(
+            user_id=user.id, 
+            is_active=True
+        ).order_by(
+            UserPhoto.upload_date.desc()
+        ).limit(3).all()
+        
+        # Get the analysis for each photo
+        for photo in latest_photos:
+            analysis = FacialAnalysis.query.filter_by(photo_id=photo.id).first()
+            if analysis:
+                photo_analyses[photo.id] = analysis
+    
+    # For debugging
+    current_app.logger.debug(f"Found {len(latest_photos)} photos for user {user.email if user else 'unknown'}")
+    for i, photo in enumerate(latest_photos):
+        current_app.logger.debug(f"Photo {i+1}: ID={photo.id}, Date={photo.upload_date}")
+        if photo.id in photo_analyses:
+            current_app.logger.debug(f"  Analysis found: Score={photo_analyses[photo.id].score}")
+        else:
+            current_app.logger.debug(f"  No analysis found")
+    
     # Load Amazon products
     amazon_products = load_amazon_products()
 
     return render_template('dashboard.html', 
                          user_info=session['user_info'],
                          photo_url=session.get('photo_url'),
+                         latest_photos=latest_photos,
+                         photo_analyses=photo_analyses,
                          products=amazon_products,
                          analysis=session.get('face_analysis'))
 
@@ -231,7 +289,54 @@ def pricing():
     """Route for pricing page"""
     return render_template('settings/pricing.html')
 
-@main.route('/first')
-def first():
-    """Route for first page"""
-    return render_template('first.html')
+
+
+@main.route('/landing')
+def landing():
+    """Route for landing page"""
+    return render_template('landing.html')
+
+@main.route('/photo/<int:photo_id>')
+@login_required
+def get_photo(photo_id):
+    """Proxy route to serve S3 photos with proper authentication"""
+    try:
+        # Get user from session
+        user_email = session['user_info']['email']
+        user = User.query.filter_by(email=user_email).first()
+        
+        if not user:
+            current_app.logger.error(f"User not found: {user_email}")
+            return jsonify({"error": "User not found"}), 404
+        
+        # Get the photo, ensuring it belongs to the current user
+        photo = UserPhoto.query.filter_by(id=photo_id, user_id=user.id).first()
+        
+        if not photo:
+            current_app.logger.error(f"Photo not found or doesn't belong to user: {photo_id}")
+            return jsonify({"error": "Photo not found"}), 404
+        
+        # Initialize S3 client
+        s3_client = boto3.client('s3',
+            aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY,
+            region_name=Config.AWS_REGION,
+            config=BotoConfig(
+                signature_version='s3v4'
+            )
+        )
+        
+        # Generate a presigned URL for the S3 object
+        presigned_url = s3_client.generate_presigned_url('get_object',
+            Params={
+                'Bucket': Config.AWS_BUCKET_NAME,
+                'Key': photo.s3_key
+            },
+            ExpiresIn=3600  # 1 hour
+        )
+        
+        # Return the presigned URL as JSON
+        return jsonify({"url": presigned_url})
+    except Exception as e:
+        current_app.logger.error(f"Error in get_photo route: {str(e)}")
+        return jsonify({"error": "An error occurred"}), 500
