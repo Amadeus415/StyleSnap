@@ -1,0 +1,104 @@
+<!-- Photos Section (visible by default) -->
+<section id="photos-section" class="px-4 py-2">
+    <h1 class="text-3xl font-bold text-gray-800 text-center my-2">Progress Pics</h1>
+    
+    
+    <!-- Cards container with cards stacked from top with specific spacing -->
+    <div class="flex flex-col space-y-4 pt-4">
+        {% if latest_photos %}
+            {% for photo in latest_photos %}
+                <!-- Photo Card {{ loop.index }} -->
+                <div class="w-[100%] mx-auto h-20 bg-gray-100 border border-gray-300 rounded-lg flex items-center shadow-sm photo-card cursor-pointer"
+                     data-photo-id="{{ photo.id }}"
+                     {% if photo.id in photo_analyses %}
+                     data-overall-score="{{ photo_analyses[photo.id].score|round|int }}"
+                     data-potential-score="{{ photo_analyses[photo.id].analysis_data.potential_score|default('90') }}"
+                     data-upload-date="{{ photo.upload_date.strftime('%b %d, %Y') }}"
+                     {% endif %}>
+                    <!-- Left 25%: User photo -->
+                    <div class="w-1/4 h-full flex items-center justify-center">
+                        <!-- Photo container with data attribute for JavaScript loading -->
+                        <div id="photoContainer{{ loop.index }}" 
+                             data-photo-id="{{ photo.id }}" 
+                             class="h-full w-full bg-gray-200 rounded-md flex items-center justify-center">
+                            <span class="loading-text text-gray-600 text-xs">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Middle 50%: Overall score and Potential score -->
+                    <div class="w-1/2 h-full flex flex-col justify-center px-4">
+                        <div class="text-gray-800">
+                            {% if photo.id in photo_analyses %}
+                                <p class="text-sm">Overall: 
+                                    <span class="font-bold">{{ photo_analyses[photo.id].score|round|int }}/100</span>
+                                </p>
+                                <p class="text-sm mb-1">Potential: 
+                                    <span class="font-bold">{{ photo_analyses[photo.id].analysis_data.potential_score|default('90') }}/100</span>
+                                </p>
+                                <!-- Progress Bar showing over and potential score (green and purple)-->
+                                <div class="w-full h-2 bg-gray-400 mb-1 rounded-full overflow-hidden relative">
+                                    <!-- We'll use a data attribute and handle the width in JavaScript -->
+                                    <div class="absolute left-0 h-full bg-emerald-500 rounded-full" 
+                                         data-score="{{ photo_analyses[photo.id].score }}"></div>
+                                    <div class="absolute left-0 h-full bg-violet-500 rounded-full" 
+                                         data-potential="{{ photo_analyses[photo.id].analysis_data.potential_score|default('90') }}"
+                                         data-score="{{ photo_analyses[photo.id].score }}"></div>
+                                </div>
+                                <!-- Date uploaded-->
+                                <p class="text-xs text-gray-500">{{ photo.upload_date.strftime('%b %d, %Y') }}</p>
+                            {% else %}
+                                <p class="text-sm">Overall Score: <span class="font-bold">--/100</span></p>
+                                <p class="text-sm">Potential Score: <span class="font-bold">--/100</span></p>
+                                <p class="text-xs text-gray-500">{{ photo.upload_date.strftime('%b %d, %Y') }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Right 25%: ">" button -->
+                    <div class="w-1/4 h-full flex items-center justify-center">
+                        <button class="text-gray-800 text-2xl font-bold">&gt;</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <!-- No photos available message -->
+            <div class="w-[100%] mx-auto h-20 bg-gray-100 border border-gray-300 rounded-lg flex items-center justify-center shadow-sm">
+                <p class="text-gray-800">No photos available. Take a photo to get started!</p>
+            </div>
+        {% endif %}
+        
+        {% if latest_photos|length < 3 %}
+            {% for i in range(latest_photos|length, 3) %}
+                <!-- Empty placeholder card -->
+                <div class="w-[100%] mx-auto h-20 bg-gray-100 border border-gray-300 rounded-lg flex items-center shadow-sm">
+                    <div class="w-1/4 h-full p-2 flex items-center justify-center">
+                        <div class="h-full w-full bg-gray-200 rounded-md flex items-center justify-center">
+                            <span class="text-gray-600 text-xs">No Photo</span>
+                        </div>
+                    </div>
+                    <div class="w-1/2 h-full flex flex-col justify-center px-4">
+                        <div class="text-gray-800">
+                            <p class="text-sm">Overall Score: <span class="font-bold">--/100</span></p>
+                            <p class="text-sm">Potential Score: <span class="font-bold">--/100</span></p>
+                        </div>
+                    </div>
+                    <div class="w-1/4 h-full flex items-center justify-center">
+                        <button class="text-gray-800 text-2xl font-bold">&gt;</button>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+       
+        <!-- Circle icon with plus sign on right side -->
+        <div class="mt-8 mb-8">
+            <a href="{{ url_for('main.camera') }}" class="w-14 h-14 bg-black rounded-full flex items-center justify-center shadow-lg float-right">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+            </a> 
+        </div>
+
+        <!-- red text this is in beta-->
+        <p class="text-red-500 text-xs text-center">This is in beta. Some features may not work as expected.</p>
+    </div>
+</section>

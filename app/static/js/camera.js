@@ -7,8 +7,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const photoDataInput = document.getElementById('photoData');
     const previewContainer = document.getElementById('previewContainer');
     const photoPreview = document.getElementById('photoPreview');
+    const uploadFileButton = document.getElementById('uploadFileButton');
     let stream = null;
     let canvas = null;
+
+    // Initialize the upload button as disabled
+    if (uploadFileButton) {
+        uploadFileButton.disabled = true;
+    }
+
+    // Function to handle file selection and update UI
+    window.showFileName = function(input) {
+        const fileName = input.files[0]?.name;
+        const fileNameElement = document.getElementById('fileName');
+        const uploadButton = document.getElementById('uploadFileButton');
+        
+        if (fileName) {
+            // Update text to clearly indicate photo is uploaded and next steps
+            fileNameElement.textContent = `✅ Photo selected!
+                                            Click the button below`;
+            fileNameElement.classList.add('text-blue-700', 'font-semibold');
+            
+            // Make button more vibrant when photo is selected
+            if (uploadButton) {
+                uploadButton.disabled = false;
+                uploadButton.classList.remove('bg-black', 'opacity-50');
+                uploadButton.classList.add('bg-blue-600', 'hover:bg-blue-700', 'shadow-lg');
+                uploadButton.innerHTML = 'Upload and Continue';
+                
+                
+            }
+        } else {
+            // Reset to default state if no file selected
+            fileNameElement.textContent = '';
+            fileNameElement.classList.remove('text-green-600', 'font-semibold');
+            
+            if (uploadButton) {
+                uploadButton.disabled = true;
+                uploadButton.classList.add('bg-black', 'opacity-50');
+                uploadButton.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'shadow-lg');
+                uploadButton.innerHTML = 'Upload and Continue';
+            }
+        }
+    };
 
     cameraButton.addEventListener('click', async function() {
         if (!stream) {

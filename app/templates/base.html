@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <!-- PWA optimized viewport -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover,  minimal-ui">
     
     <!-- PWA meta tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
     <meta name="theme-color" content="#FFFFFF">
     
     <!-- PWA icons and manifest -->
@@ -19,6 +20,13 @@
     <!-- Swiper CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 
+    <!-- DaisyUI CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.7.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2/dist/tailwind.min.css" rel="stylesheet" type="text/css" />
+
+    <!-- Neue Montreal Font -->
+    <link rel="stylesheet" href="https://use.typekit.net/qqv4lbc.css">
+
     <title>{% block title %}FaceX{% endblock %}</title>
 
     <!-- Styles -->
@@ -27,6 +35,28 @@
         .navbar-scrolled {
             background-color: rgba(255, 255, 255, 0.9) !important;
             transition: background-color 0.3s ease-in-out;
+        }
+        .neue-montreal {
+            font-family: "neue-haas-grotesk-display", sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1280px;
+                margin-left: auto;
+                margin-right: auto;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+        .desktop-warning {
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .desktop-warning {
+                display: block;
+            }
         }
     </style>
     
@@ -43,145 +73,132 @@
     {% endif %}
 </head>
 <body class="min-h-screen">
-    <!-- Navbar -->
-    <div class="navbar bg-black fixed top-0 z-50 transition-all duration-300 border-b border-gray-900 shadow-sm">
-        <!-- Logo -->
-        <div class="flex-1">
-            <a href="{{ url_for('main.first') }}" class="btn btn-ghost pl-0">
-                <div class="flex items-center">
-                    <img src="{{ url_for('static', filename='icons/face-scan-square-svgrepo-com.svg') }}" alt="FaceX Logo" class="h-10 w-10 invert">
-                    <span class="font-bold text-white text-3xl tracking-tight font-sans">FaceX</span>
-                </div>
-            </a>
-        </div>
-        
-        <!-- Hamburger menu -->
-        <div class="flex-none">
-            <button id="menuButton" class="btn btn-circle btn-ghost text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 stroke-current">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+    <!-- Desktop Warning Popup -->
+    <div id="desktopWarning" class="desktop-warning fixed top-0 left-0 right-0 bg-amber-100 text-amber-800 p-4 z-50 shadow-md">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+                <span class="font-medium">This app is optimized for mobile devices. For the best experience, please use a mobile device or resize your browser window.</span>
+            </div>
+            <button id="closeDesktopWarning" class="text-amber-800 hover:text-amber-900">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
             </button>
-            
-            <!-- Fullscreen menu -->
-            <div id="fullscreenMenu" class="fixed inset-0 bg-white z-50 hidden overflow-y-auto">
-                <!-- Menu content -->
-                <div class="flex flex-col h-full bg-white">
-                    <!-- Logo at top left with close button -->
-                    <div class="h-16 navbar flex justify-between items-center border-b border-blue-100">
-                        <div class="flex-1">
-                            <a class="btn btn-ghost pl-0">
-                                <div class="flex items-center">
-                                    <img src="{{ url_for('static', filename='icons/face-scan-square-svgrepo-com.svg') }}" alt="FaceX Logo" class="h-10 w-10">
-                                    <span class="font-bold text-black text-3xl tracking-tight font-sans">FaceX</span>
-                                </div>
-                            </a>
-                        </div>
-                        <div class="flex-none">
-                            <button id="closeMenu" class="btn btn-circle btn-ghost">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <!-- Main content with scrolling -->
-                    <div class="flex-1 overflow-y-auto px-4 pb-32">
-                        <!-- Looksmaxing Section -->
-                        <div class="collapse collapse-arrow bg-gray-100 rounded-md mb-4 mt-4">
-                            <input type="checkbox" class="peer" /> 
-                            <div class="collapse-title font-medium">
-                                Looksmaxing
-                            </div>
-                            <div class="collapse-content bg-white"> 
-                                <ul class="menu menu-sm">
-                                    <li><a href="{{ url_for('main.dashboard') }}">Progress Pics</a></li>
-                                    <li><a href="{{ url_for('main.dashboard') }}">Routine</a></li>
-                                    <li><a href="{{ url_for('main.dashboard') }}#recommendations">Product Recommendations</a></li>
+        </div>
+    </div>
 
-                                </ul>
+    <!-- Navbar -->
+    <div class="navbar bg-white fixed top-0 z-50 transition-all duration-300 h-12 min-h-0 py-0" id="mainNavbar">
+        <div class="container mx-auto">
+            <!-- Logo -->
+            <div class="flex-1">
+                <a href="{{ url_for('main.home') }}" class="btn btn-ghost pl-0 h-auto min-h-0 py-0">
+                    <div class="flex items-center">
+                        <img src="{{ url_for('static', filename='icons/infinity.svg') }}" alt="FaceX Logo" class="h-6 w-6 ml-4">
+                        <span class="neue-montreal text-black text-sm ml-1">FaceX</span>
+                    </div>
+                </a>
+            </div>
+            
+            <!-- Hamburger menu -->
+            <div class="flex-none">
+                <button id="menuButton" class="btn btn-circle btn-ghost text-black h-12 w-12 min-h-0 p-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="h-6 w-6 stroke-current">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                
+                <!-- Fullscreen menu -->
+                <div id="fullscreenMenu" class="fixed inset-0 bg-white z-50 hidden overflow-y-auto">
+                    <!-- Menu content -->
+                    <div class="flex flex-col h-full bg-white">
+                        <!-- Logo at top left with close button -->
+                        <div class="h-12 navbar min-h-0 py-0 flex justify-between items-center border-b border-gray-100 ml-4">
+                            <div class="flex-1">
+                                <a class="btn btn-ghost pl-0 h-auto min-h-0 py-0">
+                                    <div class="flex items-center">
+                                        <img src="{{ url_for('static', filename='icons/infinity.svg') }}" alt="FaceX Logo" class="h-6 w-6">
+                                        <span class="neue-montreal text-black text-sm ml-1">FaceX</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="flex-none">
+                                <button id="closeMenu" class="btn btn-circle btn-ghost h-14 w-14 min-h-0 p-0">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 mr-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                         
-                        <!-- voice link-->
-                        <div class="bg-gray-100 rounded-lg mb-4">
-                            <div class="p-4 font-medium">
-                                <a href="{{ url_for('main.first') }}" class="block w-full">AI Product Search <p class="text-xs text-gray-500">coming soon...</p></a>
-
-                            </div>
-                        </div>
-
-                        <!-- voice link-->
-                        <div class="bg-gray-100 rounded-lg mb-4">
-                            <div class="p-4 font-medium">
-                                <a href="{{ url_for('main.first') }}" class="block w-full"> AI Voice Analysis <p class="text-xs text-gray-500">coming soon...</p></a>
-
-                            </div>
-                        </div>
-
-                        <!-- about link-->
-                        <div class="bg-gray-100 rounded-lg mb-4">
-                            <div class="p-4 font-medium">
-                                <a href="{{ url_for('main.first') }}" class="block w-full">About</a>
-                            </div>
-                        </div>
-
-
-                                          
-                        <!-- Testing Section -->
-                        <div class="collapse collapse-arrow bg-gray-100 rounded-lg mb-4">
-                            <input type="checkbox" class="peer" /> 
-                            <div class="collapse-title font-medium">
-                                Testing
-                            </div>
-                            <div class="collapse-content bg-white"> 
-                                <ul class="menu menu-sm">
-                                    <li><a href="{{ url_for('main.landing') }}">Old landing page</a></li>
-                
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bottom buttons (fixed) -->
-                    <div class="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-100 flex flex-col gap-3">
-                        <!-- Take Photo Button -->
-                        <a href="{{ url_for('main.camera') }}" class="btn bg-black text-white border-none w-full normal-case font-medium rounded-xl">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                            Take Photo
-                        </a>
-                        <!-- Login/Logout Button -->
-                        {% if 'user_info' in session %}
-                            <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
-                                <div class="flex items-center gap-3">
-                                    {% if session.user_info.picture %}
-                                    <div class="avatar">
-                                        <div class="w-8 rounded-full">
-                                            <img src="{{ session.user_info.picture }}" alt="Profile" />
-                                        </div>
-                                    </div>
-                                    {% else %}
-                                    <div class="avatar placeholder">
-                                        <div class="bg-gray-200 text-gray-600 rounded-full w-8">
-                                            <span>{{ session.user_info.name[:1] }}</span>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    <span class="text-sm font-medium">{{ session.user_info.name }}</span>
+                        <!-- Main content with scrolling -->
+                        <div class="flex-1 overflow-y-auto px-4 pb-32">
+                            <!-- Looksmaxing Section -->
+                            <div class="collapse bg-gray-200 rounded-none mb-4 mt-4">
+                                <input type="radio" name="menu-accordion" checked="checked" /> 
+                                <div class="collapse-title font-semibold">
+                                    Core Features
                                 </div>
-                                <a href="{{ url_for('main.logout') }}" class="btn btn-ghost btn-sm">
-                                    Logout
-                                </a>
+                                <div class="collapse-content bg-white"> 
+                                    <ul class="menu menu-sm">
+                                        <li><a href="{{ url_for('main.dashboard') }}">Progress Pics</a></li>
+                                        <li><a href="{{ url_for('main.dashboard') }}">Routine</a></li>
+                                        <li><a href="{{ url_for('main.dashboard') }}#recommendations">Product Recommendations</a></li>
+                                    </ul>
+                                </div>
                             </div>
-                        {% else %}
-                            <a href="{{ url_for('main.login') }}" class="btn btn-outline w-full normal-case font-medium rounded-xl">
-                                Login / Sign Up
+                            
+                            <!-- about link-->
+                            <div class="bg-gray-200 rounded-none mb-4">
+                                <div class="p-4 font-semibold">
+                                    <a href="{{ url_for('main.test') }}" class="block w-full">About</a>
+                                </div>
+                            </div>
+                                               
+                        </div>
+                        
+                        <!-- Bottom buttons (fixed) -->
+                        <div class="fixed bottom-0 left-0 right-0 p-6 bg-white border-t border-gray-100 flex flex-col gap-3">
+                            <!-- Take Photo Button -->
+                            <a href="{{ url_for('main.camera') }}" class="btn bg-black text-white border-none w-full normal-case font-medium rounded-xl">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                                Take Photo
                             </a>
-                        {% endif %}
+                            <!-- Login/Logout Button -->
+                            {% if 'user_info' in session %}
+                                <div class="flex items-center justify-between bg-gray-50 p-3 rounded-xl">
+                                    <div class="flex items-center gap-3">
+                                        {% if session.user_info.picture %}
+                                        <div class="avatar">
+                                            <div class="w-8 rounded-full">
+                                                <img src="{{ session.user_info.picture }}" alt="Profile" />
+                                            </div>
+                                        </div>
+                                        {% else %}
+                                        <div class="avatar placeholder">
+                                            <div class="bg-gray-200 text-gray-600 rounded-full w-8">
+                                                <span>{{ session.user_info.name[:1] }}</span>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        <span class="text-sm font-medium">{{ session.user_info.name }}</span>
+                                    </div>
+                                    <a href="{{ url_for('main.logout') }}" class="btn btn-ghost btn-sm">
+                                        Logout
+                                    </a>
+                                </div>
+                            {% else %}
+                                <a href="{{ url_for('main.login') }}" class="btn btn-outline w-full normal-case font-medium rounded-xl">
+                                    Login / Sign Up
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,42 +206,10 @@
     </div>
 
     <!-- Main content -->
-    <main class="h-full pt-16"> <!-- Added padding-top to account for fixed navbar -->
+    <main class="h-full pt-6 container mx-auto" id="mainContent"> <!-- Added container class for responsive width -->
         {% block content %}
         {% endblock %}
     </main>
-
-    <!-- Footer -->
-    <footer class="footer footer-center bg-blue-100 text-blue-900 p-10 mt-auto">
-        <nav class="grid grid-flow-col gap-4">
-            <a class="link hover:text-blue-600">About us</a>
-            <a class="link hover:text-blue-600">Contact</a>
-            <a class="link hover:text-blue-600">Jobs</a>
-            <a class="link hover:text-blue-600">Press kit</a>
-        </nav>
-        <nav>
-            <div class="grid grid-flow-col gap-4">
-                <a class="hover:text-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
-                        <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path>
-                    </svg>
-                </a>
-                <a class="hover:text-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
-                        <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-                    </svg>
-                </a>
-                <a class="hover:text-blue-600">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
-                        <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"></path>
-                    </svg>
-                </a>
-            </div>
-        </nav>
-        <aside>
-            <p>Copyright © <script>document.write(new Date().getFullYear())</script> - All rights reserved by FaceX</p>
-        </aside>
-    </footer>
 
     <!-- PWA install prompt -->
     <div id="pwa-prompt" class="hidden fixed bottom-0 left-0 right-0 bg-white p-4 shadow-lg z-50">
@@ -289,6 +274,46 @@
             if (!menuButton.contains(e.target) && !fullscreenMenu.contains(e.target)) {
                 fullscreenMenu.classList.add('hidden');
             }
+        });
+
+        // Desktop warning popup
+        const desktopWarning = document.getElementById('desktopWarning');
+        const closeDesktopWarning = document.getElementById('closeDesktopWarning');
+        const mainNavbar = document.getElementById('mainNavbar');
+        const mainContent = document.getElementById('mainContent');
+
+        // Check if we're on a desktop/laptop
+        function isDesktop() {
+            return window.innerWidth >= 768;
+        }
+
+        // Show/hide desktop warning based on screen size
+        function updateDesktopWarning() {
+            if (isDesktop()) {
+                desktopWarning.classList.remove('hidden');
+                // Adjust main content padding to account for the warning
+                mainContent.style.paddingTop = '3rem';
+                mainNavbar.style.top = '2.5rem';
+            } else {
+                desktopWarning.classList.add('hidden');
+                // Reset padding
+                mainContent.style.paddingTop = '1.5rem';
+                mainNavbar.style.top = '0';
+            }
+        }
+
+        // Initial check
+        updateDesktopWarning();
+
+        // Update on resize
+        window.addEventListener('resize', updateDesktopWarning);
+
+        // Close desktop warning
+        closeDesktopWarning.addEventListener('click', () => {
+            desktopWarning.classList.add('hidden');
+            // Reset padding
+            mainContent.style.paddingTop = '1.5rem';
+            mainNavbar.style.top = '0';
         });
     </script>
 </body>

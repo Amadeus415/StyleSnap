@@ -1,243 +1,420 @@
 {% extends "base.html" %}
 
 {% block content %}
-<!-- Full screen fixed container -->
-<div class="fixed inset-0 bg-white">
-
-
-
-
-    <!-- Swiper container -->
-    <div class="swiper absolute w-full h-[100dvh]">
-        <div class="swiper-wrapper">
-            <!-- Slide 1: Scores -->
-            <div class="swiper-slide flex flex-col items-center">
-                <div class="h-[30dvh]"></div> <!-- Adjusted spacer height -->
-                    <!-- User Photo -->
-                    <div class="absolute top-[12dvh] left-0 right-0 flex justify-center z-10">
-                        <div class="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                            <img src="{{ photo_data }}" alt="Your Photo" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-
-                    <!-- Congrats text - Made larger and more prominent -->
-                    <div class="text-center mb-3">
-                        <h1 class="text-2xl font-bold text-black">Congrats</h1>
-                        <div class="text-lg text-black-600">
-                            Your Score is <span class="text-orange-600 font-bold"><u>Top 10%</u></span> for your age
-                        </div>
-                    </div>
-                <!-- Content container -->
-                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
-
-                    <!-- Current Score -->
-                    <!-- Attractiveness Score Label -->
-                    <div class="text-center mb-4">
-                        <h2 class="text-xl font-bold text-gray-800">Your Attractiveness Score</h2>
-                    </div>
-                    <div class="flex justify-center items-center">
-                        <div class="relative flex items-center justify-center w-48 h-48 rounded-full bg-gray-100">
-                            <div class="absolute inset-2 rounded-full bg-white flex items-center justify-center">
-                                <span class="text-4xl font-bold text-green-600 blur-lg">{{analysis.score}}</span>
-                            </div>
-                            <svg class="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-                                <circle cx="50" cy="50" r="45" fill="none" stroke="#e6e6e6" stroke-width="8" />
-                                <circle cx="50" cy="50" r="45" fill="none" stroke="#10b981" stroke-width="8" 
-                                    stroke-dasharray="283" stroke-dashoffset="calc(283 - (283 * {{analysis.score}}) / 100)" 
-                                    transform="rotate(-90 50 50)" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 2: Details -->
-            <div class="swiper-slide flex flex-col items-center">
-                
-                <!-- Content container -->
-                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-6 pb-24 flex-1">
-
-                    <!-- add spacer from top of page -->
-                    <div class="h-[10dvh]"></div>
-
-                    <!-- Title at top -->
-                    <h2 class="text-xl font-bold text-gray-800 mb-4 text-center">Your Detailed Analysis</h2>
-                    
-                    <!-- Current and Potential Score - Larger text -->
-                    <div class="flex justify-between items-center mx-6 mb-6">
-                        <div class="text-center">
-                            <h3 class="text-base font-semibold text-gray-600">Current Score</h3>
-                            <span class="text-3xl font-bold text-blue-600 blur-sm">{{analysis.score}}</span>
-                        </div>
-                        <div class="h-14 border-r border-gray-300"></div>
-                        <div class="text-center">
-                            <h3 class="text-base font-semibold text-gray-600">Potential Score</h3>
-                            <span class="text-3xl font-bold text-green-600 blur-sm">{{analysis.potential_score|default(analysis.score|int + 15)}}</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Redesigned score cards with different colors -->
-                    <div class="space-y-3 mx-4">
-                        <!-- Skin Score -->
-                        <div class="bg-white p-3 rounded-lg shadow-md">
-                            <div class="flex justify-between items-center">
-                                <h3 class="text-sm font-semibold text-gray-800">Skin</h3>
-                                <span class="text-lg font-bold text-purple-600 blur-sm">{{ analysis.skin }}/100</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
-                                <div class="bg-purple-600 h-3 rounded-full" style="width: {{ analysis.skin }}%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Jawline Score -->
-                        <div class="bg-white p-3 rounded-lg shadow-md">
-                            <div class="flex justify-between items-center">
-                                <h3 class="text-sm font-semibold text-gray-800">Jawline</h3>
-                                <span class="text-lg font-bold text-blue-600 blur-sm">{{ analysis.jawline }}/100</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
-                                <div class="bg-blue-600 h-3 rounded-full" style="width: {{ analysis.jawline }}%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Hair Score -->
-                        <div class="bg-white p-3 rounded-lg shadow-md">
-                            <div class="flex justify-between items-center">
-                                <h3 class="text-sm font-semibold text-gray-800">Hair</h3>
-                                <span class="text-lg font-bold text-green-600 blur-sm">{{ analysis.hair }}/100</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
-                                <div class="bg-green-600 h-3 rounded-full" style="width: {{ analysis.hair }}%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Smile Score -->
-                        <div class="bg-white p-3 rounded-lg shadow-md">
-                            <div class="flex justify-between items-center">
-                                <h3 class="text-sm font-semibold text-gray-800">Smile</h3>
-                                <span class="text-lg font-bold text-amber-600 blur-sm">{{ analysis.smile }}/100</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-3 mt-2">
-                                <div class="bg-amber-600 h-3 rounded-full" style="width: {{ analysis.smile }}%"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Slide 3: Celebrity Lookalikes -->
-            <div class="swiper-slide flex flex-col items-center">
-                <div class="h-[35dvh]"></div> <!-- Spacer for photo -->
-                
-                <!-- Content container -->
-                <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
-                    <div class="mx-4">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4">Celebrity Lookalikes</h2>
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="text-center">
-                                    <p class="text-gray-700 font-medium mb-2 blur-sm">Timothee Chalamet</p>
-                                    <div class="aspect-square overflow-hidden">
-                                        <img src="{{ url_for('static', filename='assets/celebrities/timothy_chalamet.jpg') }}" alt="Celebrity Lookalike" class="w-full h-full object-cover rounded-lg shadow blur-md filter">
-                                    </div>
-                                </div>
-                                <div class="text-center">
-                                    <p class="text-gray-700 font-medium mb-2 blur-sm">Josh Richards</p>
-                                    <div class="aspect-square overflow-hidden">
-                                        <img src="{{ url_for('static', filename='assets/celebrities/richards.png') }}" alt="Celebrity Lookalike" class="w-full h-full object-cover rounded-lg shadow blur-md filter">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+<!-- Main container -->
+<div class="min-h-screen bg-white text-black pb-24">
+    <!-- User Photo -->
+    <div class="pt-10 flex justify-center">
+        <div class="w-32 h-32 rounded-full overflow-hidden border-2 border-black">
+            <img src="{{ photo_data }}" alt="Your Photo" class="w-full h-full object-cover">
         </div>
-
-        <!-- Slide 4 product recommendations-->
-        <div class="swiper-slide flex flex-col items-center">
-            <div class="h-[10dvh]"></div> <!-- Spacer for navbar -->
-            
-             <!-- 3 product cards with images and names -->
-            <!-- Content container -->
-            <div class="w-full bg-gradient-to-b from-white to-slate-100 rounded-t-[2.5rem] pt-8 pb-20 flex-1">
-                <div class="mx-4">
-                    <h2 class="text-xl font-bold text-gray-800 mb-4">Product Recommendations</h2>
-                    <div class="grid grid-cols-1 gap-4">
-                        <!-- Product 1 -->
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <div class="aspect-square overflow-hidden mb-3">
-                                <div class="w-full h-full bg-gray-200 rounded-lg"></div>
-                            </div>
-                            <p class="text-gray-700 font-medium text-center">Product 1</p>
-                        </div>
-                        
-                        <!-- Product 2 -->
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <div class="aspect-square overflow-hidden mb-3">
-                                <div class="w-full h-full bg-gray-200 rounded-lg"></div>
-                            </div>
-                            <p class="text-gray-700 font-medium text-center">Product 2</p>
-                        </div>
-                        
-                        <!-- Product 3 -->
-                        <div class="bg-white p-6 rounded-lg shadow-md">
-                            <div class="aspect-square overflow-hidden mb-3">
-                                <div class="w-full h-full bg-gray-200 rounded-lg"></div>
-                            </div>
-                            <p class="text-gray-700 font-medium text-center">Product 3</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            
-        </div>
-        
-        <!-- Pagination -->
-        <div class="swiper-pagination !absolute !bottom-[15dvh] !z-[20]"></div>
     </div>
 
-    <!-- Fixed bottom button - Reduced padding and height -->
-    <div class="fixed bottom-0 left-0 right-0 bg-white px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+1.5rem)] z-[30]">
+    <!-- Premium Badge -->
+    <div class="flex justify-center -mt-4">
+        <div class="bg-amber-400 text-black text-xs font-bold px-3 py-1 rounded-full shadow-md">
+            Free Analysis
+        </div>
+    </div>
+
+    <!-- Results Header -->
+    <div class="text-center mt-8 mb-6 space-y-2">
+        <h1 class="text-3xl font-bold tracking-tight">Exceptional Results!</h1>
+        <div class="flex flex-col items-center gap-1">
+            <div class="text-lg font-medium">
+                Your Score ranks in the
+            </div>
+            <div class="bg-purple-100 text-purple-800 px-4 py-1 rounded-lg font-bold text-xl">
+                Top 10% 
+                <span class="text-base font-normal">of your demographic</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="max-w-md mx-auto px-4">
+        <!-- Section: Attractiveness Score -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold mb-4 text-center border-b border-gray-200 pb-2">Your Attractiveness Score</h2>
+            <div class="flex flex-col items-center">
+                <!-- Score Circle -->
+                <div class="relative flex items-center justify-center w-40 h-40 rounded-full bg-gradient-to-br from-purple-50 to-white mb-6 shadow-lg">
+                    <div class="absolute inset-3 rounded-full bg-white flex items-center justify-center shadow-inner">
+                        <div class="text-center">
+                            <span class="text-4xl font-bold text-green-700 blur-md">75</span>
+                            <p class="text-xs font-medium text-gray-500 mt-1">Current Score</p>
+                        </div>
+                    </div>
+                    <svg class="absolute inset-0 w-full h-full -rotate-90">
+                        <circle cx="80" cy="80" r="70" 
+                            fill="none" 
+                            stroke="#e6e6e6" 
+                            stroke-width="8"
+                            stroke-linecap="round" />
+                        <circle cx="80" cy="80" r="70"
+                            fill="none"
+                            stroke="url(#gradient)"
+                            stroke-width="8"
+                            stroke-linecap="round"
+                            stroke-dasharray="440"
+                            stroke-dashoffset="110" />
+                        <defs>
+                            <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#22c55e" />
+                                <stop offset="100%" style="stop-color:#16a34a" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                
+                <!-- Potential Score Card -->
+                <div class="flex justify-center items-center w-full max-w-xs">
+                    <div class="text-center bg-gradient-to-r from-purple-50 to-purple-100 p-6 rounded-xl w-full shadow-sm border border-purple-200">
+                        <h3 class="text-base font-semibold text-purple-900 mb-2">Potential Score</h3>
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <span class="text-4xl font-bold blur-sm text-purple-800">97</span>
+                            <div class="flex items-center text-green-600 bg-green-100 px-2 py-1 rounded-full text-xs font-medium">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                                </svg>
+                                +12
+                            </div>
+                        </div>
+                        <p class="text-sm text-purple-700 font-medium">Unlock your full potential</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Social Proof -->
+            <div class="mt-6 bg-gray-50 p-3 rounded-lg text-sm text-center">
+                <p class="font-medium text-gray-700">You're more attractive than <span class="font-bold">87%</span> of users in your age group</p>
+                <div class="flex justify-center space-x-1 mt-2">
+                    <div class="w-8 h-8 rounded-full bg-gray-300 blur-sm"></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-300 blur-sm"></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-300 blur-sm"></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-300 blur-sm"></div>
+                    <div class="w-8 h-8 rounded-full bg-gray-300 relative flex items-center justify-center blur-sm">
+                        <span class="text-xs font-bold text-white">+24</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Attraction Analysis -->
+        <section class="mb-10 relative z-0">
+            <div class="absolute inset-0 bg-white bg-opacity-70 flex items-center justify-center rounded-lg">
+                <div class="text-center">
+                    
+                    <button class="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-900 transition-colors">
+                        Unlock Attraction Analysis
+                    </button>
+                </div>
+            </div>
+            <h2 class="text-xl font-bold mb-4 text-center border-b border-gray-200 pb-2">Who's Attracted to You</h2>
+            <div class="border border-gray-200 p-4 rounded-lg blur-sm">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="font-semibold">Your Appeal Profile</h3>
+                        <p class="text-sm text-gray-600">Based on facial feature analysis</p>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-sm font-medium">Confidence: 92%</span>
+                    </div>
+                </div>
+                
+                <div class="mt-4 grid grid-cols-2 gap-3">
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <div class="ml-2">
+                            <span class="text-sm font-medium">Athletic Types</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        <div class="ml-2">
+                            <span class="text-sm font-medium">Artistic Types</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-amber-500"></div>
+                        <div class="ml-2">
+                            <span class="text-sm font-medium">Professional Types</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full">
+                                <div class="bg-amber-500 h-2 rounded-full" style="width: 60%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <div class="w-3 h-3 rounded-full bg-purple-500"></div>
+                        <div class="ml-2">
+                            <span class="text-sm font-medium">Academic Types</span>
+                            <div class="w-full bg-gray-200 h-2 rounded-full">
+                                <div class="bg-purple-500 h-2 rounded-full" style="width: 35%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Detailed Analysis -->
+        <section class="mb-10">
+            <h2 class="text-xl font-bold mb-4 text-center border-b border-gray-200 pb-2">Your Detailed Analysis</h2>
+            
+            <!-- Overall Score -->
+            <div class="bg-white border-2 border-gray-800 p-6 rounded-xl mb-6">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-lg font-bold">Overall Facial Structure</h3>
+                    <span class="text-2xl font-bold blur-sm">86/100</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="bg-blue-600 h-3 rounded-full" style="width: 86%"></div>
+                </div>
+                <p class="text-sm text-gray-600 mt-2">Excellent facial harmony with strong masculine features</p>
+            </div>
+
+            <!-- Detailed Scores -->
+            <div class="space-y-4">
+                <!-- Skin -->
+                <div class="bg-white border border-gray-200 p-4 rounded-lg hover:shadow-lg transition-all duration-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="text-sm font-semibold">Skin Quality</h3>
+                        </div>
+                        <span class="text-lg font-bold blur-sm">82/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-green-500 h-2.5 rounded-full" style="width: 82%"></div>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2">Clear complexion with minimal texture irregularities</p>
+                </div>
+
+                <!-- Hair -->
+                <div class="bg-white border border-gray-200 p-4 rounded-lg hover:shadow-lg transition-all duration-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <h3 class="text-sm font-semibold">Hair Quality</h3>
+                        </div>
+                        <span class="text-lg font-bold blur-sm">88/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-amber-500 h-2.5 rounded-full" style="width: 88%"></div>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2">Excellent density and healthy texture</p>
+                </div>
+
+                <!-- Jawline -->
+                <div class="bg-white border border-gray-200 p-4 rounded-lg hover:shadow-lg transition-all duration-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="text-sm font-semibold">Jawline Definition</h3>
+                        </div>
+                        <span class="text-lg font-bold blur-sm">90/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-blue-500 h-2.5 rounded-full" style="width: 90%"></div>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2">Strong angular definition (75° angle)</p>
+                </div>
+
+                <!-- Teeth -->
+                <div class="bg-white border border-gray-200 p-4 rounded-lg hover:shadow-lg transition-all duration-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="text-sm font-semibold">Dental Aesthetics</h3>
+                        </div>
+                        <span class="text-lg font-bold blur-sm">85/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-purple-500 h-2.5 rounded-full" style="width: 85%"></div>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2">Excellent alignment and whiteness</p>
+                </div>
+
+                <!-- Masculinity -->
+                <div class="bg-white border border-gray-200 p-4 rounded-lg hover:shadow-lg transition-all duration-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="text-sm font-semibold">Masculine Features</h3>
+                        </div>
+                        <span class="text-lg font-bold blur-sm">87/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-red-500 h-2.5 rounded-full" style="width: 87%"></div>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2">Strong brow ridge and facial bone structure</p>
+                </div>
+
+                <!-- Eyes -->
+                <div class="bg-white border border-gray-200 p-4 rounded-lg hover:shadow-lg transition-all duration-200">
+                    <div class="flex justify-between items-center mb-2">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-500 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                            </svg>
+                            <h3 class="text-sm font-semibold">Eye Aesthetics</h3>
+                        </div>
+                        <span class="text-lg font-bold blur-sm">84/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div class="bg-indigo-500 h-2.5 rounded-full" style="width: 84%"></div>
+                    </div>
+                    <p class="text-xs text-gray-600 mt-2">Positive canthal tilt with good symmetry</p>
+                </div>
+            </div>
+            <!-- Unlock Full Analysis Button -->
+            <div class="mt-6">
+                <button class="w-full py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-900 transition-colors">
+                    Unlock Full Analysis Report
+                </button>
+                <p class="text-xs text-center mt-2 text-gray-500">Includes detailed measurements and personalized improvement advice</p>
+            </div>
+        </section>
+
+        <!-- Section: Celebrity Lookalikes -->
+        <section class="mb-10">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-bold border-b border-gray-200 pb-2">Celebrity Lookalikes</h2>
+                <span class="text-sm font-medium text-purple-700">87% Match</span>
+            </div>
+            <div class="border border-gray-200 p-4 rounded-lg hover:shadow-md transition-shadow">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center">
+                        <p class="text-sm font-medium mb-2 blur-sm">Timothee Chalamet</p>
+                        <div class="aspect-square overflow-hidden">
+                            <img src="{{ url_for('static', filename='assets/celebrities/timothy_chalamet.jpg') }}" alt="Celebrity Lookalike" class="w-full h-full object-cover rounded blur-md">
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-sm font-medium mb-2 blur-sm">Josh Richards</p>
+                        <div class="aspect-square overflow-hidden">
+                            <img src="{{ url_for('static', filename='assets/celebrities/richards.png') }}" alt="Celebrity Lookalike" class="w-full h-full object-cover rounded blur-md">
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <button class="text-sm font-medium text-purple-800 hover:underline">View more celebrity matches →</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Personalized Recommendations -->
+        <section class="mb-10 relative z-0">
+            
+            <h2 class="text-xl font-bold mb-4 text-center border-b border-gray-200 pb-2">Personalized Recommendations</h2>
+            <div class="text-center mb-6">
+                <p class="text-sm">Products scientifically selected to enhance your features</p>
+            </div>
+            <div class="space-y-4 blur-sm">
+                <!-- Product 1 -->
+                <div class="border border-gray-200 p-4 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="flex items-center">
+                        <div class="w-20 h-20 bg-gray-200 rounded-lg mr-3"></div>
+                        <div class="flex-1">
+                            <h3 class="font-medium">Premium Skin Optimizer</h3>
+                            <p class="text-sm text-gray-600">Specifically formulated for your skin type</p>
+                            <div class="flex items-center mt-1">
+                                <div class="flex text-amber-400 text-sm">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                                <span class="text-xs ml-1 text-gray-500">(248 reviews)</span>
+                            </div>
+                        </div>
+                        <div class="ml-2">
+                            <p class="font-bold">$39.99</p>
+                            <p class="text-xs line-through text-gray-500">$59.99</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="w-full bg-black text-white py-2 rounded-lg text-sm font-medium hover:bg-gray-900 transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="border border-gray-200 p-4 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="flex items-center">
+                        <div class="w-20 h-20 bg-gray-200 rounded-lg mr-3"></div>
+                        <div class="flex-1">
+                            <h3 class="font-medium">Jawline Enhancer System</h3>
+                            <p class="text-sm text-gray-600">Sculpting techniques + supplement</p>
+                            <div class="flex items-center mt-1">
+                                <div class="flex text-amber-400 text-sm">
+                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                                </div>
+                                <span class="text-xs ml-1 text-gray-500">(176 reviews)</span>
+                            </div>
+                        </div>
+                        <div class="ml-2">
+                            <p class="font-bold">$89.99</p>
+                            <p class="text-xs line-through text-gray-500">$119.99</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="w-full bg-black text-white py-2 rounded-lg text-sm font-medium hover:bg-gray-900 transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="border border-gray-200 p-4 rounded-lg hover:shadow-md transition-shadow">
+                    <div class="flex items-center">
+                        <div class="w-20 h-20 bg-gray-200 rounded-lg mr-3"></div>
+                        <div class="flex-1">
+                            <h3 class="font-medium">Complete Enhancement Package</h3>
+                            <p class="text-sm text-gray-600">Full regimen + video consultation</p>
+                            <div class="mt-1">
+                                <span class="bg-green-100 text-green-800 text-xs px-2 py-0.5 rounded">BEST VALUE</span>
+                            </div>
+                        </div>
+                        <div class="ml-2">
+                            <p class="font-bold">$149.99</p>
+                            <p class="text-xs line-through text-gray-500">$249.99</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <button class="w-full bg-purple-800 text-white py-2 rounded-lg text-sm font-medium hover:bg-purple-900 transition-colors">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-6">
+                    <p class="text-sm text-gray-500">All products backed by our 30-day satisfaction guarantee</p>
+                </div>
+            </div>
+        </section>
+        
+
+
+    <!-- Fixed bottom button -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] border-t border-gray-200 shadow-lg">
+        <div class="text-center mb-2">
+            <p class="text-sm font-medium">Unlock your full potential with premium analysis</p>
+        </div>
         <a href="{{url_for('main.login')}}" 
-           class="flex items-center justify-center w-full py-3 bg-black text-white rounded-full font-medium text-lg">
+           class="flex items-center justify-center w-full py-3 bg-purple-800 text-white rounded font-medium hover:bg-purple-900 transition-colors">
             <img src="{{ url_for('static', filename='assets/google.png') }}" alt="Google" class="w-5 h-5 mr-2">
             Continue with Google
         </a>
+        <p class="text-xs text-center text-gray-500 mt-2">Trusted by 200,000+ users worldwide</p>
     </div>
 </div>
-
-<!-- Initialize Swiper -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const swiper = new Swiper('.swiper', {
-        loop: true,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-            bulletClass: 'swiper-pagination-bullet !bg-black',
-            bulletActiveClass: 'swiper-pagination-bullet-active !bg-black'
-        },
-        effect: 'fade',
-        fadeEffect: {
-            crossFade: true
-        }
-    });
-});
-</script>
-
-<style>
-.swiper-pagination-bullet {
-    background: black !important;
-    opacity: 0.2;
-    width: 10px !important;
-    height: 10px !important;
-    margin: 0 5px !important;
-}
-.swiper-pagination-bullet-active {
-    opacity: 1 !important;
-}
-</style>
 {% endblock %}

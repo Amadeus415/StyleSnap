@@ -2,52 +2,75 @@
 
 {% block content %}
 
-<div class="flex flex-col items-center justify-center p-4">
-    <h1 class="text-3xl font-bold text-center mb-6">Facial Analysis</h1>
-    
-    
+<div class="flex flex-col items-center justify-center w-full px-0 py-4 pb-20">
+
+    <!-- Main text -->
+    <div class="text-center mt-4 mb-4">
+        <h1 class="text-4xl font-bold text-black">Discover Your</h1>
+        <h1 class="text-4xl font-bold text-blue-600">Potential</h1>
+        <h1 class="text-4xl font-bold text-black">In Just One Scan</h1>
+    </div>
+
+    <!-- Button to take photo -->
+    <div class="w-[80%] px-6 mb-4">
+        <div class="relative">
+            <!-- Pulsing background effect -->
+            <div class="absolute -inset-1 bg-gradient-to-r from-purple-600 to-blue-500 rounded-lg blur opacity-75 animate-pulse"></div>
+            
+            <a href="{{ url_for('main.camera') }}" class="relative w-full flex items-center justify-center py-4 px-6 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:brightness-110">
+                <span class="mr-2">Take Your Photo Now</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 animate-bounce" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 3a1 1 0 00-1 1v5H4a1 1 0 100 2h5v5a1 1 0 102 0v-5h5a1 1 0 100-2h-5V4a1 1 0 00-1-1z" clip-rule="evenodd" />
+                </svg>
+            </a>
+        </div>
+        
+        <!-- Social proof text -->
+        <p class="text-center text-sm text-gray-600 mt-2">Join 200,000+ others who discovered their potential</p>
+    </div>
+
+    <!-- Instruction Text -->
+    <p class="text-sm text-gray-600 mb-2">Drag the handle below to compare</p>
+
     <!-- Interactive Image Comparison -->
-    <div class="w-full max-w-4xl mb-8">
+    <div class="w-[80%] max-w-4xl">
         <div class="image-comparison-container relative w-full h-auto rounded-lg overflow-hidden shadow-lg">
             <!-- Before Image (Base Layer) -->
-            <img src="{{ url_for('static', filename='assets/imageFX/girl1_resize.jpg') }}" alt="Before" class="before-image w-full h-auto object-cover">
+            <img src="{{ url_for('static', filename='assets/imageFX/square1.0.svg') }}" alt="Before" class="before-image w-full h-auto object-cover">
             
             <!-- After Image (Overlay Layer) -->
-            <img src="{{ url_for('static', filename='assets/imageFX/girl2_resize.jpg') }}" alt="After" class="after-image absolute top-0 left-0 w-full h-auto object-cover" style="clip-path: inset(0 50% 0 0);">
+            <img src="{{ url_for('static', filename='assets/imageFX/square2.jpg') }}" alt="After" class="after-image absolute top-0 left-0 w-full h-auto object-cover" style="clip-path: inset(0 50% 0 0);">
             
             <!-- Draggable Handle -->
             <div class="comparison-handle absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize" style="left: 50%;">
-                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white shadow-md flex items-center justify-center">
-                    <div class="flex flex-col items-center justify-center">
-                        <span class="transform -rotate-90 text-gray-500">←</span>
-                        <span class="transform rotate-90 text-gray-500">→</span>
-                    </div>
+                <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center">
+                    <!-- Double-sided arrow icon to indicate sliding -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16l-4-4m0 0l4-4m-4 4h18m0 0l-4 4m4-4l-4-4"/>
+                    </svg>
                 </div>
             </div>
         </div>
         
-
-        
-        <!-- New Two-Column Text Layout -->
-        <div class="w-full mt-6 pt-4 border-t border-gray-200">
+        <!-- Two-Column Text Layout -->
+        <div class="w-full py-3 border-t border-gray-200 bg-gray-50">
             <div class="flex font-sans">
-                <div class="w-1/2 pr-4 flex flex-col items-center border-r border-gray-300">
+                <div class="w-1/2 pr-2 flex flex-col items-center border-r border-gray-300">
                     <div class="text-center">
-                        <span class="text-gray-500 text-sm uppercase">VISUALISATION /</span>
-                        <span class="font-bold text-gray-800 ml-1">Whole face</span>
+                        <span class="text-gray-500 text-xs uppercase font-medium">VISUALISATION /</span>
+                        <span class="font-bold text-gray-800 ml-1 text-sm">Selfie</span>
                     </div>
                 </div>
-                <div class="w-1/2 pl-4 flex flex-col items-center">
+                <div class="w-1/2 pl-2 flex flex-col items-center">
                     <div class="text-center">
-                        <span class="text-gray-500 text-sm uppercase">TIMELINE /</span>
-                        <span class="font-bold text-gray-800 ml-1">4 Months</span>
+                        <span class="text-gray-500 text-xs uppercase font-medium">TIMELINE /</span>
+                        <span class="font-bold text-gray-800 ml-1 text-sm">4 Months</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
-   
+
 </div>
 
 <!-- Include the image comparison script -->

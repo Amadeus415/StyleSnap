@@ -16,8 +16,9 @@ from .models import User, UserPhoto, FacialAnalysis
 
 #My utils
 from .utils import get_or_create_user, save_and_analyze_photo, load_amazon_products
+from .AI_utils import analyze_face, generate_tailored_plan
 
-
+import json
 
 # Allow HTTP for local development
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
@@ -48,13 +49,13 @@ client_secrets = {
 
 # Add this line to override the redirect URI with your ngrok URL
 # Make sure this EXACTLY matches what's in your Google Cloud Console
-NGROK_URL = "https://76fa-172-56-42-152.ngrok-free.app"  # Replace with your actual ngrok URL
+NGROK_URL = "https://14d1-2607-fb90-9e99-ad3-9df4-6009-4d47-2d9.ngrok-free.app"  # Replace with your actual ngrok URL
 REDIRECT_URI = f"{NGROK_URL}/oauth2callback"
 
 @main.route('/')
-def first():
+def home():
     """Route for landing page"""
-    return render_template('first.html')
+    return render_template('home.html')
 
 @main.route('/camera')
 def camera():
@@ -111,10 +112,16 @@ def results():
 
                 #Add presigned url to session
                 session['photo_url'] = presigned_url
-                
-                return render_template('results.html', 
-                                    photo_data=presigned_url,
-                                    analysis=result['analysis'])
+
+                #If user is logged in, save photo to database and redirect to dashboard
+                if 'user_info' in session:
+                    # User is logged in, redirect to dashboard
+                    return redirect(url_for('main.dashboard'))
+                else:
+                    # User is not logged in, show results page
+                    return render_template('results.html', 
+                                        photo_data=presigned_url,
+                                        analysis=result['analysis'])
             else:
                 return redirect(url_for('main.camera'))
                 
@@ -162,7 +169,7 @@ def login():
 def logout():
     """Route to log out the user"""
     session.clear()
-    return redirect(url_for('main.first'))
+    return redirect(url_for('main.home'))
 
 @main.route('/oauth2callback')
 def oauth2callback():
@@ -215,6 +222,43 @@ def oauth2callback():
                 subscription_status='free'
             )
             db.session.add(user)
+            db.session.flush()  # Flush to get the user ID
+        
+        # Check if there's a photo in the session that needs to be transferred
+        # from an anonymous user to this authenticated user
+        try:
+            # Try to get the photo URL from either session key
+            photo_url = session.get('last_photo') or session.get('photo_url')
+            
+            if photo_url:
+                current_app.logger.info(f"Found photo URL in session: {photo_url}")
+                # Find the photo in the database
+                photo = UserPhoto.query.filter_by(s3_url=photo_url).first()
+                
+                if not photo:
+                    # If we can't find by s3_url, try to extract the key from the URL
+                    bucket_name = Config.AWS_BUCKET_NAME
+                    if f"{bucket_name}.s3" in photo_url:
+                        key = photo_url.split(f"{bucket_name}.s3")[1].split('/', 1)[1]
+                        photo = UserPhoto.query.filter_by(s3_key=key).first()
+                
+                if photo:
+                    # Get the owner of the photo
+                    photo_owner = User.query.get(photo.user_id)
+                    
+                    # If the photo exists and belongs to an anonymous user, transfer it
+                    if photo_owner and 'anonymous' in photo_owner.email:
+                        # Transfer the photo to the authenticated user
+                        photo.user_id = user.id
+                        
+                        # Also transfer any analysis data
+                        analysis = FacialAnalysis.query.filter_by(photo_id=photo.id).first()
+                        if analysis:
+                            analysis.user_id = user.id
+                        
+                        current_app.logger.info(f"Transferred photo {photo.id} from anonymous user to {user.email}")
+        except Exception as e:
+            current_app.logger.error(f"Error transferring photo: {str(e)}")
         
         db.session.commit()
         
@@ -224,7 +268,7 @@ def oauth2callback():
         
     except Exception as e:
         current_app.logger.error(f"OAuth error: {str(e)}")
-        return redirect(url_for('main.first'))
+        return redirect(url_for('main.home'))
 
 @main.route('/dashboard')
 @login_required
@@ -265,30 +309,44 @@ def dashboard():
             current_app.logger.debug(f"  No analysis found")
     
     # Load Amazon products
-    amazon_products = load_amazon_products()
+    products = load_amazon_products()
+    amazon_products = {'products': products}
+
+    # If we have a photo URL in the session but no photos were found,
+    # this might be a race condition where the photo transfer just happened
+    # but the query above didn't catch it. Let's check again.
+    if len(latest_photos) == 0 and ('photo_url' in session or 'last_photo' in session):
+        photo_url = session.get('last_photo') or session.get('photo_url')
+        if photo_url:
+            # Try to find the photo directly
+            photo = UserPhoto.query.filter_by(s3_url=photo_url, user_id=user.id).first()
+            if photo:
+                latest_photos = [photo]
+                analysis = FacialAnalysis.query.filter_by(photo_id=photo.id).first()
+                if analysis:
+                    photo_analyses[photo.id] = analysis
+                    
+                current_app.logger.debug(f"Found photo by URL: ID={photo.id}")
 
     return render_template('dashboard.html', 
                          user_info=session['user_info'],
                          photo_url=session.get('photo_url'),
                          latest_photos=latest_photos,
                          photo_analyses=photo_analyses,
-                         products=amazon_products,
+                         amazon_products=amazon_products,
                          analysis=session.get('face_analysis'))
 
 
-@main.route('/home')
-@login_required
-def home():
-    """Route for home page"""
-    return render_template('home.html',
-                           user_info=session['user_info'],
-                           photo_url=session.get('photo_url'),
-                           analysis=session.get('face_analysis'))
-@main.route('/pricing')
-def pricing():
-    """Route for pricing page"""
-    return render_template('settings/pricing.html')
+# @main.route('/home')
+# def home():
+#     """Route for home page"""
+#     return render_template('home.html')
 
+
+@main.route('/test')
+def test():
+    """Route for test page"""
+    return render_template('test.html')
 
 
 @main.route('/landing')
@@ -340,3 +398,133 @@ def get_photo(photo_id):
     except Exception as e:
         current_app.logger.error(f"Error in get_photo route: {str(e)}")
         return jsonify({"error": "An error occurred"}), 500
+
+@main.route('/photo_popup/<int:photo_id>')
+@login_required
+def photo_popup(photo_id):
+    """
+    Route to render the photo popup template with complete analysis data
+    
+    This route:
+    1. Retrieves the photo data for the specified ID
+    2. Ensures the photo belongs to the current user
+    3. Fetches the associated analysis data
+    4. Generates a presigned URL for the photo
+    5. Renders the popup template with all data
+    
+    Args:
+        photo_id (int): The ID of the photo to display
+        
+    Returns:
+        Rendered HTML template with all photo analysis data
+    """
+    try:
+        # Get user from session
+        user_email = session['user_info']['email']
+        user = User.query.filter_by(email=user_email).first()
+        
+        if not user:
+            current_app.logger.error(f"User not found: {user_email}")
+            return "User not found", 404
+        
+        # Get the photo, ensuring it belongs to the current user
+        photo = UserPhoto.query.filter_by(id=photo_id, user_id=user.id).first()
+        
+        if not photo:
+            current_app.logger.error(f"Photo not found or doesn't belong to user: {photo_id}")
+            return "Photo not found", 404
+        
+        # Get the analysis for the photo
+        analysis = FacialAnalysis.query.filter_by(photo_id=photo.id).first()
+        
+        # Initialize S3 client
+        s3_client = boto3.client('s3',
+            aws_access_key_id=Config.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=Config.AWS_SECRET_ACCESS_KEY,
+            region_name=Config.AWS_REGION,
+            config=BotoConfig(
+                signature_version='s3v4'
+            )
+        )
+        
+        # Generate a presigned URL for the S3 object
+        presigned_url = s3_client.generate_presigned_url('get_object',
+            Params={
+                'Bucket': Config.AWS_BUCKET_NAME,
+                'Key': photo.s3_key
+            },
+            ExpiresIn=3600  # 1 hour
+        )
+        
+        # Prepare template data
+        template_data = {
+            "photo_id": photo.id,
+            "photo_url": presigned_url,
+            "upload_date": photo.upload_date.strftime('%b %d, %Y'),
+        }
+        
+        # If analysis exists, add the analysis data to the template
+        if analysis:
+            # Convert analysis_data from JSON string if needed
+            analysis_data = analysis.analysis_data
+            if isinstance(analysis_data, str):
+                try:
+                    analysis_data = json.loads(analysis_data)
+                except json.JSONDecodeError:
+                    analysis_data = {}
+            
+            template_data["analysis_data"] = analysis_data
+        else:
+            # Provide empty analysis data if none exists
+            template_data["analysis_data"] = {}
+        
+        # Render only the popup template content
+        return render_template('partials/photo_popup.html', **template_data)
+    except Exception as e:
+        current_app.logger.error(f"Error in photo_popup route: {str(e)}")
+        return "An error occurred", 500
+
+@main.route('/generate_tailored_plan', methods=['POST'])
+@login_required
+def get_tailored_plan():
+    """
+    API endpoint to generate a tailored plan based on the user's latest analysis
+    """
+    try:
+        # Get user from session
+        user_email = session['user_info']['email']
+        user = User.query.filter_by(email=user_email).first()
+        
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        # Get the latest photo analysis
+        latest_analysis = FacialAnalysis.query.filter_by(
+            user_id=user.id
+        ).order_by(
+            FacialAnalysis.created_at.desc()
+        ).first()
+        
+        if not latest_analysis:
+            return jsonify({"error": "No analysis found for this user"}), 404
+        
+        # Get the analysis data
+        analysis_data = latest_analysis.analysis_data
+        if isinstance(analysis_data, str):
+            try:
+                analysis_data = json.loads(analysis_data)
+            except json.JSONDecodeError:
+                return jsonify({"error": "Invalid analysis data format"}), 500
+        
+        # Load available products
+        products = load_amazon_products()
+        
+        # Generate tailored plan
+        tailored_plan = generate_tailored_plan(analysis_data, products)
+        
+        # Return the tailored plan as JSON
+        return jsonify(tailored_plan)
+    
+    except Exception as e:
+        current_app.logger.error(f"Error in generate_tailored_plan route: {str(e)}")
+        return jsonify({"error": str(e)}), 500

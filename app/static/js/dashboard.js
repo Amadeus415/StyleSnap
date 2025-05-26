@@ -128,14 +128,53 @@ function loadUserPhoto(photoId, containerId) {
  * This function is called when the DOM content is loaded
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Get all photo containers that need to be loaded
-    const photoContainers = document.querySelectorAll('[data-photo-id]');
+    // Initialize progress bars
+    initProgressBars();
     
-    // Load each photo
+    // Load photos
+    loadPhotos();
+});
+
+/**
+ * Initialize progress bars based on data attributes
+ */
+function initProgressBars() {
+    // Get all score progress bars
+    const scoreProgressBars = document.querySelectorAll('.bg-emerald-500[data-score]');
+    
+    // Get all potential progress bars
+    const potentialProgressBars = document.querySelectorAll('.bg-violet-500[data-potential][data-score]');
+    
+    // Set width for score progress bars
+    scoreProgressBars.forEach(bar => {
+        const score = bar.getAttribute('data-score');
+        bar.style.width = `${score}%`;
+    });
+    
+    // Set width and clip path for potential progress bars
+    potentialProgressBars.forEach(bar => {
+        const potential = bar.getAttribute('data-potential');
+        const score = bar.getAttribute('data-score');
+        
+        bar.style.width = `${potential}%`;
+        bar.style.clipPath = `inset(0 0 0 ${score}%)`;
+    });
+}
+
+/**
+ * Load photos from server
+ */
+function loadPhotos() {
+    // Get all photo containers
+    const photoContainers = document.querySelectorAll('[id^="photoContainer"]');
+    
+    // For each container, load the photo
     photoContainers.forEach(container => {
         const photoId = container.getAttribute('data-photo-id');
+        
         if (photoId) {
+            // Use the loadUserPhoto function to load the image
             loadUserPhoto(photoId, container.id);
         }
     });
-});
+}

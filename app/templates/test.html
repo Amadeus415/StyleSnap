@@ -211,23 +211,5 @@
         </div>
         
         
-        <!-- Scroll-triggered footer -->
-    <!-- For a sticky footer with gradient background -->
-    <div id="scrollFooter" class="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-primary to-primary-focus text-white py-4 transform translate-y-full transition-transform duration-300 ease-in-out shadow-lg z-50">
-        <div class="container mx-auto flex justify-between items-center px-4">
-            <p class="text-lg font-bold">Ready to see your score?</p>
-            <button onclick="window.location.href='{{url_for('main.camera')}}'" class="btn btn-secondary h-12 px-6 text-lg active:scale-95 transition-transform duration-150">
-                Take Photo →
-            </button>
-        </div>
-    </div>
-
-    
-    
-
-</div>
-
-<!-- JavaScript for scroll footer -->
-<script src="{{ url_for('static', filename='js/scroll-footer.js') }}"></script>
 
 {% endblock %}

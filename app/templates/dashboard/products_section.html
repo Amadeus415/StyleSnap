@@ -1,0 +1,107 @@
+<!-- Products Section (hidden by default) -->
+<section id="products-section" class="px-4 py-6 hidden">
+    
+    <!-- Category Filter Dropdown -->
+    <div class="flex justify-center mb-6">
+        <div class="form-control w-full max-w-xs">
+            <select id="product-category-filter" class="select select-bordered text-center font-bold text-2xl">
+                <option value="all" selected>All products</option>
+                <option value="style">Style Products</option>
+                <option value="fitness">Fitness Products</option>
+                <option value="skin">Skin Products</option>
+                <option value="jawline">Jawline Products</option>
+                <option value="smile">Smile Products</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Product Cards from Amazon Data -->
+        {% for product in amazon_products.products %}
+        <div class="card bg-base-100 shadow-md hover:shadow-lg transition-shadow duration-300 product-card" data-category="{{ product.category }}">
+            <!-- Recommended for you label -->
+            <div class="absolute top-2 right-2 bg-white px-2 py-1 rounded shadow-sm">
+                <span class="text-red-600 font-bold text-sm">Recommended for you</span>
+            </div>
+            <figure class="px-4 pt-4">
+                <img src="{{ product.image_url }}" alt="{{ product.title }}" class="rounded-xl h-48 w-full object-contain" />
+            </figure>
+            <div class="card-body p-4">
+                <h2 class="card-title text-lg font-semibold">{{ product.title }}</h2>
+                <p class="text-sm text-gray-600 line-clamp-2">{{ product.description }}</p>
+                
+                <!-- Benefits Tags -->
+                <div class="flex flex-wrap gap-1 my-2">
+                    {% for benefit, value in product.benefits.items() %}
+                    {% set color = {
+                        'skin': 'badge-error',
+                        'jawline': 'badge-warning',
+                        'hair': 'badge-success',
+                        'smile': 'badge-info',
+                        'style': 'badge-primary',
+                        'fitness': 'badge-secondary'
+                    }.get(benefit.lower(), 'badge-accent') %}
+                    <span class="badge {{ color }} badge-sm">{{ benefit }} {{ value }}</span>
+                    {% endfor %}
+                </div>
+                
+                <div class="flex justify-between items-center mt-2">
+                    <span class="text-lg font-bold">${{ product.price }}</span>
+                    <a href="{{ product.affiliate_link }}" target="_blank" class="btn btn-primary btn-sm">View on Amazon</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- JavaScript for Product Category Filtering -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const categoryFilter = document.getElementById('product-category-filter');
+        const productCards = document.querySelectorAll('.product-card');
+        
+        categoryFilter.addEventListener('change', function() {
+            const selectedCategory = this.value;
+            
+            // Filter products based on selected category
+            productCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                
+                if (selectedCategory === 'all' || cardCategory === selectedCategory) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Update section title if needed
+            const sectionTitle = document.querySelector('#products-section h1');
+            if (sectionTitle) {
+                switch(selectedCategory) {
+                    case 'all':
+                        sectionTitle.textContent = 'All Products';
+                        break;
+                    case 'style':
+                        sectionTitle.textContent = 'Style Products';
+                        break;
+                    case 'fitness':
+                        sectionTitle.textContent = 'Fitness Products';
+                        break;
+                    case 'skin':
+                        sectionTitle.textContent = 'Skin Products';
+                        break;
+                    case 'jawline':
+                        sectionTitle.textContent = 'Jawline Products';
+                        break;
+                    case 'smile':
+                        sectionTitle.textContent = 'Smile Products';
+                        break;
+                    default:
+                        sectionTitle.textContent = 'All Products';
+                }
+            }
+        });
+    });
+</script>
+</div>
